@@ -1,5 +1,6 @@
 package web.taskflow.funcionario;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import org.hibernate.annotations.DynamicUpdate;
 import jakarta.persistence.Column;
@@ -28,7 +29,7 @@ import web.taskflow.empresa.Empresa;
 @Setter
 @ToString(onlyExplicitlyIncluded = true)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class Funcionario {
+public class Funcionario implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
