@@ -1,5 +1,6 @@
 package web.taskflow.empresa;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import org.hibernate.annotations.DynamicUpdate;
 import jakarta.persistence.Column;
@@ -24,7 +25,7 @@ import web.taskflow.common.enums.Status;
 @Setter
 @ToString(onlyExplicitlyIncluded = true)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class Empresa {
+public class Empresa implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

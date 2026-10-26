@@ -1,5 +1,6 @@
 package web.taskflow.funcionario;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import org.hibernate.annotations.DynamicUpdate;
 import jakarta.persistence.Column;
@@ -22,20 +23,20 @@ import web.taskflow.common.enums.Status;
 import web.taskflow.empresa.Empresa;
 
 @Entity
-@Table(name = "funcinario")
+@Table(name = "funcionario")
 @DynamicUpdate
 @Getter
 @Setter
 @ToString(onlyExplicitlyIncluded = true)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class Funcionario {
+public class Funcionario implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     public Funcionario () {};
 
     @Id
-	@SequenceGenerator(name="gerador2", sequenceName="empresa_codigo_seq", allocationSize=1)
+	@SequenceGenerator(name="gerador2", sequenceName="funcionario_codigo_seq", allocationSize=1)
 	@GeneratedValue(generator="gerador2", strategy=GenerationType.SEQUENCE)
     @EqualsAndHashCode.Include
 	@ToString.Include
