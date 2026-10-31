@@ -20,6 +20,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import web.taskflow.common.enums.Status;
+import web.taskflow.departamento.Departamento;
 import web.taskflow.empresa.Empresa;
 
 @Entity
@@ -60,4 +61,7 @@ public class Funcionario implements Serializable {
     @Enumerated(EnumType.STRING)
     @ToString.Include
     private Status status = Status.ATIVO;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Departamento departamento;
 }
