@@ -39,8 +39,8 @@ public class Departamento implements Serializable {
     public Departamento () {};
     
     @Id
-	@SequenceGenerator(name="gerador4", sequenceName="departamento_codigo_seq", allocationSize=1)
-	@GeneratedValue(generator="gerador4", strategy=GenerationType.SEQUENCE)
+	@SequenceGenerator(name="gerador_departamento", sequenceName="departamento_codigo_seq", allocationSize=1)
+	@GeneratedValue(generator="gerador_departamento", strategy=GenerationType.SEQUENCE)
     @EqualsAndHashCode.Include
 	@ToString.Include
     private Long codigo;

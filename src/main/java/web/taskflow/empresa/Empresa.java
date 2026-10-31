@@ -32,8 +32,8 @@ public class Empresa implements Serializable {
     public Empresa () {};
 
     @Id
-	@SequenceGenerator(name="gerador1", sequenceName="empresa_codigo_seq", allocationSize=1)
-	@GeneratedValue(generator="gerador1", strategy=GenerationType.SEQUENCE)
+	@SequenceGenerator(name="gerador_empresa", sequenceName="empresa_codigo_seq", allocationSize=1)
+	@GeneratedValue(generator="gerador_empresa", strategy=GenerationType.SEQUENCE)
     @EqualsAndHashCode.Include
 	@ToString.Include
     private Long codigo;

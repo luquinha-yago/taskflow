@@ -36,8 +36,8 @@ public class Funcionario implements Serializable {
     public Funcionario () {};
 
     @Id
-	@SequenceGenerator(name="gerador2", sequenceName="funcionario_codigo_seq", allocationSize=1)
-	@GeneratedValue(generator="gerador2", strategy=GenerationType.SEQUENCE)
+	@SequenceGenerator(name="gerador_funcionario", sequenceName="funcionario_codigo_seq", allocationSize=1)
+	@GeneratedValue(generator="gerador_funcionario", strategy=GenerationType.SEQUENCE)
     @EqualsAndHashCode.Include
 	@ToString.Include
     private Long codigo;
