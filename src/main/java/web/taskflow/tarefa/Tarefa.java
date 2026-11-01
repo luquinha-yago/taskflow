@@ -23,6 +23,7 @@ import web.taskflow.common.enums.Prioridade;
 import web.taskflow.common.enums.Status;
 import web.taskflow.empresa.Empresa;
 import web.taskflow.funcionario.Funcionario;
+import web.taskflow.projeto.Projeto;
 
 @Entity
 @Table(name = "tarefa")
@@ -81,4 +82,8 @@ public class Tarefa implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "empresa_id")
     private Empresa empresa;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "codigo_projeto")
+    private Projeto projeto;
 }

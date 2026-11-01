@@ -13,9 +13,9 @@
 	</parent>
 
 	<groupId>web</groupId>
-	<artifactId>controlevacinacao</artifactId>
+	<artifactId>taskflow</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>controlevacinacao</name>
+	<name>taskflow</name>
 
 	<properties>
 		<!-- Versao do Java -->

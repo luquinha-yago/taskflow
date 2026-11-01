@@ -20,6 +20,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import web.taskflow.common.enums.Status;
+import web.taskflow.departamento.Departamento;
 import web.taskflow.empresa.Empresa;
 
 @Entity
@@ -36,8 +37,8 @@ public class Funcionario implements Serializable {
     public Funcionario () {};
 
     @Id
-	@SequenceGenerator(name="gerador2", sequenceName="funcionario_codigo_seq", allocationSize=1)
-	@GeneratedValue(generator="gerador2", strategy=GenerationType.SEQUENCE)
+	@SequenceGenerator(name="gerador_funcionario", sequenceName="funcionario_codigo_seq", allocationSize=1)
+	@GeneratedValue(generator="gerador_funcionario", strategy=GenerationType.SEQUENCE)
     @EqualsAndHashCode.Include
 	@ToString.Include
     private Long codigo;
@@ -60,4 +61,8 @@ public class Funcionario implements Serializable {
     @Enumerated(EnumType.STRING)
     @ToString.Include
     private Status status = Status.ATIVO;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "codigo_departamento")
+    private Departamento departamento;
 }
