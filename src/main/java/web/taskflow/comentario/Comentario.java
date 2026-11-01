@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.DynamicUpdate;
+import web.taskflow.common.enums.Status;
 import web.taskflow.funcionario.Funcionario;
 import web.taskflow.tarefa.Tarefa;
 
@@ -39,9 +40,15 @@ public class Comentario implements Serializable {
     @ToString.Include
     private LocalDateTime hora_registro;
 
-    @ToString.Include
+    @JoinColumn(name = "codigo_funcionario")
+    @ManyToOne(fetch = FetchType.LAZY)
     private Funcionario funcionario;
 
-    @ToString.Include
+    @JoinColumn(name = "codigo_tarefa")
+    @ManyToOne(fetch = FetchType.LAZY)
     private Tarefa tarefa;
+
+    @ToString.Include
+    @Enumerated(EnumType.STRING)
+    private Status status = Status.ATIVO;
 }

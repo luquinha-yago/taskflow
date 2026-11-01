@@ -63,5 +63,6 @@ public class Funcionario implements Serializable {
     private Status status = Status.ATIVO;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "codigo_departamento")
     private Departamento departamento;
 }

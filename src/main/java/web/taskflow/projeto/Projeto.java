@@ -8,7 +8,9 @@ import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.DynamicUpdate;
 import web.taskflow.common.enums.Prioridade;
+import web.taskflow.common.enums.Status;
 import web.taskflow.common.enums.StatusProjeto;
+import web.taskflow.departamento.Departamento;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -60,5 +62,14 @@ public class Projeto implements Serializable {
     private StatusProjeto statusProjeto;
 
     @ToString.Include
+    @Enumerated(EnumType.STRING)
     private Prioridade prioridade;
+
+    @ToString.Include
+    @Enumerated(EnumType.STRING)
+    private Status status = Status.ATIVO;
+
+    @JoinColumn(name = "codigo-departamento")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Departamento departamento;
 }
