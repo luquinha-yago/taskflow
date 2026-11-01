@@ -84,5 +84,6 @@ public class Tarefa implements Serializable {
     private Empresa empresa;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "codigo_projeto")
     private Projeto projeto;
 }

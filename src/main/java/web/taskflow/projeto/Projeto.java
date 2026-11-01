@@ -59,6 +59,7 @@ public class Projeto implements Serializable {
 
     @Column(name = "status_projeto")
     @ToString.Include
+    @Enumerated(EnumType.STRING)
     private StatusProjeto statusProjeto;
 
     @ToString.Include
@@ -69,7 +70,7 @@ public class Projeto implements Serializable {
     @Enumerated(EnumType.STRING)
     private Status status = Status.ATIVO;
 
-    @JoinColumn(name = "codigo-departamento")
+    @JoinColumn(name = "codigo_departamento")
     @ManyToOne(fetch = FetchType.LAZY)
     private Departamento departamento;
 }
