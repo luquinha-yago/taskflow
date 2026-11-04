@@ -42,27 +42,35 @@ public class Funcionario implements Serializable {
     @EqualsAndHashCode.Include
 	@ToString.Include
     private Long codigo;
+
     @ToString.Include
     private String nome;
+
     @ToString.Include
     private String cpf;
+
     @ToString.Include
     private String email;
+
     @ToString.Include
     private String telefone;
+
     @ToString.Include
     private String cargo;
+
     @Column(name = "data_admissao")
     @ToString.Include
     private LocalDate dataAdmissao;
+    
     @ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "codigo_empresa")
     private Empresa empresa;
-    @Enumerated(EnumType.STRING)
-    @ToString.Include
-    private Status status = Status.ATIVO;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "codigo_departamento")
     private Departamento departamento;
+    
+    @Enumerated(EnumType.STRING)
+    @ToString.Include
+    private Status status = Status.ATIVO;
 }
