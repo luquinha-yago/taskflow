@@ -66,11 +66,11 @@ public class Projeto implements Serializable {
     @Enumerated(EnumType.STRING)
     private Prioridade prioridade;
 
-    @ToString.Include
-    @Enumerated(EnumType.STRING)
-    private Status status = Status.ATIVO;
-
     @JoinColumn(name = "codigo_departamento")
     @ManyToOne(fetch = FetchType.LAZY)
     private Departamento departamento;
+
+    @ToString.Include
+    @Enumerated(EnumType.STRING)
+    private Status status = Status.ATIVO;
 }
