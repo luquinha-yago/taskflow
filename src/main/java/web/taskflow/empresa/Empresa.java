@@ -37,23 +37,31 @@ public class Empresa implements Serializable {
     @EqualsAndHashCode.Include
 	@ToString.Include
     private Long codigo;
+
     @Column(name = "razao_social")
     @ToString.Include
     private String razaoSocial;
+
     @Column(name = "nome_fantasia")
     @ToString.Include
     private String nomeFantasia;
+
     @ToString.Include
     private String cnpj;
+
     @ToString.Include
     private String email;
+
     @ToString.Include
     private String telefone;
+
     @ToString.Include
     private String endereco;
+
     @Column(name = "data_cadastro")
     @ToString.Include
     private LocalDate dataCadastro;
+    
     @Enumerated(EnumType.STRING)
     @ToString.Include
     private Status status = Status.ATIVO;
