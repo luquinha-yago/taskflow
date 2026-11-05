@@ -71,14 +71,6 @@ public class Tarefa implements Serializable {
     @ToString.Include
     private Prioridade prioridade = Prioridade.MEDIA;
 
-    @Enumerated(EnumType.STRING)
-    @ToString.Include
-    private Status status = Status.ATIVO;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "funcionario_responsavel_id")
-    private Funcionario funcionarioResponsavel;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "empresa_id")
     private Empresa empresa;
@@ -86,4 +78,12 @@ public class Tarefa implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "codigo_projeto")
     private Projeto projeto;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "funcionario_responsavel_id")
+    private Funcionario funcionarioResponsavel;
+
+    @Enumerated(EnumType.STRING)
+    @ToString.Include
+    private Status status = Status.ATIVO;
 }
