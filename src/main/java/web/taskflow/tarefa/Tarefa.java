@@ -21,6 +21,8 @@ import lombok.Setter;
 import lombok.ToString;
 import web.taskflow.common.enums.Prioridade;
 import web.taskflow.common.enums.Status;
+import web.taskflow.common.enums.StatusProjeto;
+import web.taskflow.common.enums.StatusTarefa;
 import web.taskflow.empresa.Empresa;
 import web.taskflow.funcionario.Funcionario;
 import web.taskflow.projeto.Projeto;
@@ -86,4 +88,9 @@ public class Tarefa implements Serializable {
     @Enumerated(EnumType.STRING)
     @ToString.Include
     private Status status = Status.ATIVO;
+
+    @Column(name = "status_tarefa")
+    @Enumerated(EnumType.STRING)
+    @ToString.Include
+    private StatusTarefa statusTarefa;
 }
