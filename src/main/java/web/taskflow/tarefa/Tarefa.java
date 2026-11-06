@@ -68,6 +68,11 @@ public class Tarefa implements Serializable {
     @ToString.Include
     private LocalDate dataConclusao;
 
+    @Column(name = "status_tarefa")
+    @Enumerated(EnumType.STRING)
+    @ToString.Include
+    private StatusTarefa statusTarefa = StatusTarefa.A_FAZER;
+
     @Enumerated(EnumType.STRING)
     @ToString.Include
     private Prioridade prioridade = Prioridade.MEDIA;
@@ -87,9 +92,4 @@ public class Tarefa implements Serializable {
     @Enumerated(EnumType.STRING)
     @ToString.Include
     private Status status = Status.ATIVO;
-
-    @Column(name = "status_tarefa")
-    @Enumerated(EnumType.STRING)
-    @ToString.Include
-    private StatusTarefa statusTarefa;
 }
