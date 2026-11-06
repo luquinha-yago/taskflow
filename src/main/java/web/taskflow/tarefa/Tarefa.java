@@ -40,8 +40,8 @@ public class Tarefa implements Serializable {
     public Tarefa() {}
 
     @Id
-    @SequenceGenerator(name = "gerador3", sequenceName = "tarefa_codigo_seq", allocationSize = 1)
-    @GeneratedValue(generator = "gerador3", strategy = GenerationType.SEQUENCE)
+    @SequenceGenerator(name = "gerador_tarefa", sequenceName = "tarefa_codigo_seq", allocationSize = 1)
+    @GeneratedValue(generator = "gerador_tarefa", strategy = GenerationType.SEQUENCE)
     @EqualsAndHashCode.Include
     @ToString.Include
     private Long id;
