@@ -1,30 +1,20 @@
 package web.taskflow.tarefa;
 
-import java.io.Serializable;
-import java.time.LocalDate;
-import org.hibernate.annotations.DynamicUpdate;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.SequenceGenerator;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.DynamicUpdate;
 import web.taskflow.common.enums.Prioridade;
 import web.taskflow.common.enums.Status;
 import web.taskflow.common.enums.StatusTarefa;
 import web.taskflow.empresa.Empresa;
 import web.taskflow.funcionario.Funcionario;
 import web.taskflow.projeto.Projeto;
+
+import java.io.Serializable;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "tarefa")
