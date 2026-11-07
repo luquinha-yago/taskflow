@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="pt-BR"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title layout:title-pattern="$LAYOUT_TITLE - $CONTENT_TITLE">
+        Taskflow
+    </title>
+
+    <link rel="shortcut icon" th:href="@{/images/logo.png}" />
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}" />
+
+    <!-- Biblioteca HTMX -->
+    <script defer th:src="@{/js/vendors/htmx/htmx.min.js}"></script>
+
+    <meta name="htmx-config" content='{"defaultSwap":"outerHTML"}' />
+
+    <!-- CSRF -->
+    <meta name="_csrf" th:content="${_csrf?.token}" />
+    <meta name="_csrf_header" th:content="${_csrf?.headerName}" />
+
+</head>
+
+<body class="min-h-screen bg-[#101827] text-gray-100 antialiased">
+
+    <!-- Container principal -->
+    <div class="flex min-h-screen flex-col">
+
+        <!-- Conteúdo da página -->
+        <main layout:fragment="conteudo" id="main" class="flex-1">
+        </main>
+
+        <!-- Rodapé público -->
+        <footer class="border-t border-white/10 bg-[#101827]">
+            <div class="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 px-6 py-6 sm:flex-row">
+
+                <div class="flex items-center gap-2">
+                    <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-600">
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                             class="h-5 w-5 text-white"
+                             fill="none" viewBox="0 0 24 24"
+                             stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="8" height="8" rx="2"/>
+                            <rect x="13" y="3" width="8" height="8" rx="2"/>
+                            <rect x="3" y="13" width="8" height="8" rx="2"/>
+                            <rect x="13" y="13" width="8" height="8" rx="2"/>
+                        </svg>
+                    </div>
+
+                    <span class="text-sm font-semibold text-white">Taskflow</span>
+                </div>
+
+                <p class="text-center text-xs text-gray-500">
+                    © 2026 Taskflow. Todos os direitos reservados.
+                </p>
+
+                <span class="text-xs text-gray-500">
+                    Organização em cada tarefa.
+                </span>
+
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- Scripts adicionais -->
+    <th:block layout:fragment="scripts"></th:block>
+
+</body>
+</html>
