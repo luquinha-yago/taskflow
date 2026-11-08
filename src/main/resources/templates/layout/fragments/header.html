@@ -1,73 +1,189 @@
-<div th:fragment="header" xmlns:th="http://www.thymeleaf.org"
-  xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-  <!-- Header -->
-  <header class="flex items-center justify-between bg-gray-800 p-4">
-    <!-- Botao Hamburger -->
-    <div class="md:hidden">
-      <button id="menu-btn" type="button" class="hamburger z-40 block focus:outline-none md:hidden">
-        <span class="hamburger-top"></span>
-        <span class="hamburger-middle"></span>
-        <span class="hamburger-bottom"></span>
-      </button>
+<div th:fragment="header"
+     xmlns:th="http://www.thymeleaf.org"
+     xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+    <!-- Cabeçalho principal -->
+    <header class="relative z-30 flex h-20 items-center justify-between border-b border-slate-700/70 bg-[#172235] px-4 shadow-lg shadow-black/10 md:px-8">
+
+        <!-- Lado esquerdo -->
+        <div class="flex items-center gap-4">
+
+            <!-- Botão do menu mobile -->
+            <div class="md:hidden">
+                <button id="menu-btn"
+                        type="button"
+                        aria-label="Abrir menu de navegação"
+                        class="hamburger z-40 block rounded-lg p-2 text-slate-300 transition hover:bg-slate-700/60 hover:text-white focus:outline-none md:hidden">
+                    <span class="hamburger-top"></span>
+                    <span class="hamburger-middle"></span>
+                    <span class="hamburger-bottom"></span>
+                </button>
+            </div>
+
+            <!-- Logo e nome -->
+            <a th:href="@{/}"
+               class="flex items-center gap-3 transition-opacity hover:opacity-80">
+
+                <img th:src="@{/images/logo.png}"
+                     alt="Logo Taskflow"
+                     class="h-10 w-10 object-contain md:h-11 md:w-11" />
+
+                <div class="flex flex-col">
+                    <span class="text-xl font-bold tracking-tight text-white md:text-2xl">
+                        Task<span class="text-blue-500">flow</span>
+                    </span>
+
+                    <span class="hidden text-[10px] font-medium uppercase tracking-[0.2em] text-slate-500 sm:block">
+                        Gestão inteligente
+                    </span>
+                </div>
+            </a>
+        </div>
+
+        <!-- Área do usuário - Desktop -->
+        <div th:fragment="usuariologinlogout"
+             id="usuariologinlogout"
+             hx-get="/layout/header-atualizado"
+             hx-trigger="atualizarAuth from:body"
+             hx-target="this"
+             class="hidden items-center gap-4 md:flex">
+
+            <!-- Usuário autenticado -->
+            <div sec:authorize="isAuthenticated()"
+                 class="flex items-center gap-3">
+
+                <div class="flex h-10 w-10 items-center justify-center rounded-xl border border-blue-400/20 bg-blue-500/10 text-blue-400">
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                         class="h-5 w-5"
+                         fill="none"
+                         viewBox="0 0 24 24"
+                         stroke="currentColor"
+                         stroke-width="1.8">
+                        <path stroke-linecap="round"
+                              stroke-linejoin="round"
+                              d="M20 21a8 8 0 0 0-16 0m8-10a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z" />
+                    </svg>
+                </div>
+
+                <div class="flex flex-col">
+                    <span class="text-xs text-slate-500">Conectado como</span>
+                    <span class="max-w-40 truncate text-sm font-semibold text-slate-200">
+                        <span sec:authentication="principal.username"></span>
+                    </span>
+                </div>
+
+                <div class="mx-2 h-8 w-px bg-slate-700"></div>
+
+                <!-- Logout -->
+                <a th:hx-post="@{/logout}"
+                   hx-target="#main"
+                   hx-swap="outerHTML"
+                   hx-push-url="true"
+                   class="inline-flex cursor-pointer items-center gap-2 rounded-xl border border-slate-600/70 bg-slate-800/70 px-4 py-2.5 text-sm font-medium text-slate-300 transition hover:border-red-400/30 hover:bg-red-500/10 hover:text-red-400">
+
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                         class="h-4 w-4"
+                         fill="none"
+                         viewBox="0 0 24 24"
+                         stroke="currentColor"
+                         stroke-width="1.8">
+                        <path stroke-linecap="round"
+                              stroke-linejoin="round"
+                              d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6A2.25 2.25 0 0 0 5.25 5.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15M18 15l3-3m0 0-3-3m3 3H9" />
+                    </svg>
+
+                    Sair
+                </a>
+            </div>
+
+            <!-- Login, caso não autenticado -->
+            <div sec:authorize="!isAuthenticated()">
+                <a th:hx-get="@{/login}"
+                   hx-target="#main"
+                   hx-swap="outerHTML"
+                   hx-push-url="true"
+                   class="inline-flex cursor-pointer items-center gap-2 rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-blue-900/20 transition hover:bg-blue-500">
+
+                    Entrar
+                </a>
+            </div>
+        </div>
+
+        <!-- Botão do usuário - Mobile -->
+        <div class="mr-1 text-slate-300 md:hidden">
+            <button id="menu-usuario-btn"
+                    type="button"
+                    aria-label="Abrir opções do usuário"
+                    class="rounded-xl p-2 transition hover:bg-slate-700/60 hover:text-white focus:outline-none">
+
+                <svg xmlns="http://www.w3.org/2000/svg"
+                     width="26"
+                     height="26"
+                     fill="currentColor"
+                     viewBox="0 0 16 16">
+                    <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 5-4 7 3 7 4m-1-.004c-.001-.246-.154-.986-.832-1.664C11.485 10.659 10.554 10 8 10s-3.485.659-4.168 1.332c-.678.678-.83 1.418-.832 1.664z"/>
+                </svg>
+            </button>
+        </div>
+
+    </header>
+
+    <!-- Menu mobile de navegação -->
+    <div id="menu"
+         hx-ignore
+         class="absolute bottom-0 left-0 top-20 z-40 hidden min-h-[calc(100vh-5rem)] w-full flex-col overflow-y-auto border-t border-slate-700 bg-[#172235] px-7 pb-10 pt-8 text-slate-300 shadow-2xl md:hidden">
+
+        <th:block th:replace="~{layout/fragments/menu :: menu}"></th:block>
     </div>
 
-    <!-- Icone e nome sistema -->
-    <a th:href="@{/}">
-      <div class="flex items-center">
-        <img src="/images/syringe.png" alt="Ícone de uma seringa" class="h-8 w-8 md:h-12 md:w-12" />
-        <div class="text-xl font-semibold text-gray-400 md:text-3xl">Controle de Vacinação</div>
-      </div>
-    </a>
+    <!-- Menu mobile do usuário -->
+    <div id="menu-usuario"
+         class="absolute bottom-0 left-0 top-20 z-40 hidden min-h-[calc(100vh-5rem)] w-full flex-col items-end gap-5 overflow-y-auto border-t border-slate-700 bg-[#172235] px-7 pb-10 pt-8 text-slate-300 shadow-2xl md:hidden">
 
-    <!-- Usuário e login/logout -->
-    <div class="hidden items-center md:flex" th:fragment="usuariologinlogout" id="usuariologinlogout"
-      hx-get="/layout/header-atualizado" hx-trigger="atualizarAuth from:body" hx-target="this">
+        <div sec:authorize="isAuthenticated()"
+             class="flex w-full flex-col items-end gap-4">
 
-      <!-- botao login -->
-      <div sec:authorize="!isAuthenticated()">
-        <a th:hx-get="@{/login}" hx-target="#main" hx-swap="outerHTML" hx-push-url="true"
-          class="cursor-pointer ml-5 rounded-lg border-2 border-gray-600 bg-gray-600 px-8 py-2 text-white shadow-md hover:bg-white hover:text-gray-600">
-          Login </a>
-      </div>
-      <!-- nome do usuario -->
-      <div sec:authorize="isAuthenticated()">
-        <div class="text-sm text-gray-300 md:text-xl"><span sec:authentication="principal.username"></span></div>
-      </div>
-      <!-- botao logout -->
-      <div sec:authorize="isAuthenticated()">
-        <a th:hx-post="@{/logout}" hx-target="#main" hx-swap="outerHTML" hx-push-url="true"
-          class="cursor-pointer ml-5 rounded-lg border-2 border-gray-600 bg-gray-600 px-8 py-2 text-white shadow-md hover:bg-white hover:text-gray-600">
-          Logout </a>
-      </div>
+            <div class="flex items-center gap-3">
+                <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-500/10 text-blue-400">
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                         class="h-5 w-5"
+                         fill="none"
+                         viewBox="0 0 24 24"
+                         stroke="currentColor"
+                         stroke-width="1.8">
+                        <path stroke-linecap="round"
+                              stroke-linejoin="round"
+                              d="M20 21a8 8 0 0 0-16 0m8-10a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z"/>
+                    </svg>
+                </div>
+
+                <div class="text-right">
+                    <span class="block text-xs text-slate-500">Conectado como</span>
+                    <span class="font-semibold text-white">
+                        <span sec:authentication="principal.username"></span>
+                    </span>
+                </div>
+            </div>
+
+            <a th:hx-post="@{/logout}"
+               hx-target="#main"
+               hx-swap="outerHTML"
+               hx-push-url="true"
+               class="inline-flex cursor-pointer items-center gap-2 rounded-xl border border-red-400/20 bg-red-500/10 px-5 py-3 text-sm font-semibold text-red-400 transition hover:bg-red-500/20">
+                Sair da plataforma
+            </a>
+        </div>
+
+        <div sec:authorize="!isAuthenticated()">
+            <a th:hx-get="@{/login}"
+               hx-target="#main"
+               hx-swap="outerHTML"
+               hx-push-url="true"
+               class="inline-flex cursor-pointer items-center gap-2 rounded-xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-blue-500">
+                Entrar na plataforma
+            </a>
+        </div>
+
     </div>
 
-    <!-- Botao Usuario -->
-    <div class="mr-1 text-gray-300 md:hidden">
-      <button id="menu-usuario-btn" type="button" class="hamburger z-40 block focus:outline-none md:hidden">
-        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor"
-          class="bi bi-person-vcard-fill" viewBox="0 0 16 16">
-          <path
-            d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm9 1.5a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 0-1h-4a.5.5 0 0 0-.5.5M9 8a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 0-1h-4A.5.5 0 0 0 9 8m1 2.5a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 0-1h-3a.5.5 0 0 0-.5.5m-1 2C9 10.567 7.21 9 5 9c-2.086 0-3.8 1.398-3.984 3.181A1 1 0 0 0 2 13h6.96q.04-.245.04-.5M7 6a2 2 0 1 0-4 0 2 2 0 0 0 4 0" />
-        </svg>
-      </button>
-    </div>
-  </header>
-
-  <!-- Mobile Menu -->
-  <div id="menu" hx-ignore
-    class="absolute bottom-0 left-0 top-0 hidden min-h-screen w-full flex-col space-y-3 self-end bg-gray-800 py-1 pl-12 pt-40 text-lg text-gray-400">
-    <th:block th:replace="~{layout/fragments/menu :: menu}"></th:block>
-  </div>
-
-  <!-- Mobile Menu Usuario -->
-  <div id="menu-usuario"
-    class="absolute bottom-0 left-0 top-0 hidden min-h-screen w-full flex-col items-end space-y-3 self-end bg-gray-800 py-1 pr-12 pt-20 text-lg text-gray-400">
-    <div class="text-gray-300">Grosbilda</div>
-    <a href="#"
-      class="ml-5 rounded-lg border-2 border-gray-600 bg-gray-600 px-8 py-2 text-white shadow-md hover:bg-white hover:text-gray-600">
-      Login </a>
-    <a href="#"
-      class="ml-5 rounded-lg border-2 border-gray-600 bg-gray-600 px-8 py-2 text-white shadow-md hover:bg-white hover:text-gray-600">
-      Logout </a>
-  </div>
 </div>

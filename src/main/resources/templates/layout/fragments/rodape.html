@@ -1,5 +1,10 @@
 <!-- Rodape -->
-<footer th:fragment="rodape" class="flex h-10 items-center justify-center bg-gray-800 text-gray-400 md:h-20"
-  xmlns:th="http://www.thymeleaf.org">
-  <span>&copy; Web IFTM</span>
+<footer th:fragment="rodape"
+        xmlns:th="http://www.thymeleaf.org"
+        class="flex min-h-12 items-center justify-center border-t border-slate-700/70 bg-[#172235] px-4 py-3 text-center md:min-h-14">
+
+    <span class="text-xs text-slate-500">
+        &copy; <span th:text="${#dates.year(#dates.createNow())}">2026</span>
+        Taskflow. Todos os direitos reservados.
+    </span>
 </footer>
