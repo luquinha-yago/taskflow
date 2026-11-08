@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="pt-BR"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.thymeleaf.org"
+      layout:decorate="~{layout/layoutpadrao}">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Funcionários</title>
+</head>
+
+<body>
+
+    <main layout:fragment="conteudo"
+          th:fragment="conteudo"
+          id="main"
+          class="flex flex-col w-full p-6 md:p-10">
+
+        <div th:replace="~{components/cabecalho-pagina :: cabecalho(
+            'Funcionários',
+            'Consulte, pesquise e gerencie os funcionários cadastrados na plataforma.',
+            null
+        )}"></div>
+
+        <!-- Pesquisa -->
+        <form th:hx-get="@{/funcionarios}"
+              th:object="${funcionarioSearchRequest}"
+              class="w-full mb-8">
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+
+                <div>
+                    <div th:replace="~{components/forms :: inputTexto(
+                        textoLabel='Nome',
+                        nomeAtributo='nome',
+                        valorAtributo=*{nome})}">
+                    </div>
+                </div>
+
+                <div>
+                    <div th:replace="~{components/forms :: inputTexto(
+                        textoLabel='CPF',
+                        nomeAtributo='cpf',
+                        valorAtributo=*{cpf})}">
+                    </div>
+                </div>
+
+                <div>
+                    <div th:replace="~{components/forms :: inputTexto(
+                        textoLabel='Cargo',
+                        nomeAtributo='cargo',
+                        valorAtributo=*{cargo})}">
+                    </div>
+                </div>
+
+            </div>
+
+            <button type="submit"
+                    class="mt-5 px-5 py-3 rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-500 transition">
+                Pesquisar
+            </button>
+
+        </form>
+
+        <!-- Listagem -->
+        <div th:if="${not pagina.vazia}"
+             class="w-full overflow-x-auto">
+
+            <div class="min-w-full inline-block align-middle">
+
+                <div class="border border-slate-700 rounded-xl overflow-hidden">
+
+                    <table class="min-w-full divide-y divide-slate-700">
+
+                        <thead class="bg-slate-800">
+                            <tr>
+
+                                <th:block th:replace="~{components/paginacao :: coluna(
+                                    ${pagina}, 'id', 'Código', ''
+                                )}">
+                                </th:block>
+
+                                <th:block th:replace="~{components/paginacao :: coluna(
+                                    ${pagina}, 'nome', 'Nome', ''
+                                )}">
+                                </th:block>
+
+                                <th scope="col"
+                                    class="px-6 py-4 text-left text-xs font-semibold text-slate-400 uppercase">
+                                    CPF
+                                </th>
+
+                                <th scope="col"
+                                    class="px-6 py-4 text-left text-xs font-semibold text-slate-400 uppercase">
+                                    Cargo
+                                </th>
+
+                                <th scope="col"
+                                    class="px-6 py-4 text-left text-xs font-semibold text-slate-400 uppercase">
+                                    Status
+                                </th>
+
+                                <th scope="col"
+                                    colspan="2"
+                                    class="px-6 py-4 text-right text-xs font-semibold text-slate-400 uppercase">
+                                    Ações
+                                </th>
+
+                            </tr>
+                        </thead>
+
+                        <tbody class="divide-y divide-slate-700">
+
+                            <tr th:each="funcionario : ${pagina.conteudo}"
+                                class="bg-slate-900 hover:bg-slate-800 transition">
+
+                                <td th:text="${funcionario.id}"
+                                    class="px-6 py-4 whitespace-nowrap text-sm text-slate-300">
+                                </td>
+
+                                <td th:text="${funcionario.nome}"
+                                    class="px-6 py-4 whitespace-nowrap text-sm font-medium text-white">
+                                </td>
+
+                                <td th:text="${funcionario.cpf}"
+                                    class="px-6 py-4 whitespace-nowrap text-sm text-slate-300">
+                                </td>
+
+                                <td th:text="${funcionario.cargo}"
+                                    class="px-6 py-4 whitespace-nowrap text-sm text-slate-300">
+                                </td>
+
+                                <td th:text="${funcionario.status}"
+                                    class="px-6 py-4 whitespace-nowrap text-sm text-slate-300">
+                                </td>
+
+                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm">
+
+                                    <a th:hx-get="@{/funcionarios/{id}/editar(id=${funcionario.id})}"
+                                       hx-push-url="true"
+                                       class="text-blue-400 hover:text-blue-300 cursor-pointer">
+                                        Alterar
+                                    </a>
+
+                                </td>
+
+                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm">
+
+                                    <button type="button"
+                                            th:hx-delete="@{/funcionarios/{id}(id=${funcionario.id})}"
+                                            th:hx-confirm="${'Você deseja remover o funcionário ' + funcionario.nome + '?'}"
+                                            class="text-red-400 hover:text-red-300 cursor-pointer">
+                                        Remover
+                                    </button>
+
+                                </td>
+
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+                <div th:replace="~{components/paginacao :: paginacao(${pagina})}">
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Estado vazio -->
+        <div th:if="${pagina.vazia}"
+             class="flex flex-col items-center justify-center py-16 border border-dashed border-slate-700 rounded-xl">
+
+            <p class="text-lg font-medium text-white">
+                Nenhum funcionário encontrado
+            </p>
+
+            <p class="mt-2 text-sm text-slate-400">
+                Não existem funcionários cadastrados ou correspondentes à pesquisa.
+            </p>
+
+        </div>
+
+    </main>
+
+</body>
+</html>
