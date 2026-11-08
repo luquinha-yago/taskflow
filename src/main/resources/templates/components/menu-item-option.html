@@ -1,0 +1,21 @@
+<div th:fragment="menu-item-option(texto, url, svg)"
+     xmlns:th="http://www.thymeleaf.org"
+     class="group flex items-center rounded-lg px-3 py-2 text-sm transition-all duration-200 hover:bg-slate-700/40">
+
+    <!-- Ícone -->
+    <span class="flex h-7 w-7 shrink-0 items-center justify-center text-slate-500 transition-colors group-hover:text-blue-400">
+
+        <svg th:replace="${svg}"></svg>
+
+    </span>
+
+    <!-- Texto e navegação HTMX -->
+    <a th:text="${texto}"
+       th:hx-get="${url}"
+       hx-target="#main"
+       hx-push-url="true"
+       class="ml-2 w-full cursor-pointer text-slate-400 transition-colors group-hover:text-white">
+        Opção
+    </a>
+
+</div>

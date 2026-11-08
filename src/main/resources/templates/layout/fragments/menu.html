@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
+<div th:fragment="menu" class="space-y-2" hx-get="/layout/menu-atualizado" hx-trigger="atualizarAuth from:body"
+  hx-target="this">
+
+  <!-- Empresas -->
+  <div x-data="{ open: false }">
+    <button th:replace="~{components/menu-item-button :: menu-item-button('Empresas', ~{::#empresa-icon})}">
+    </button>
+
+    <div x-show="open" x-cloak x-transition class="ml-5 mt-1 space-y-1 border-l border-slate-700 pl-4">
+
+      <!-- Futuramente: cadastrar e pesquisar empresas -->
+
+    </div>
+  </div>
+
+  <!-- Funcionários -->
+  <div x-data="{ open: false }">
+    <button th:replace="~{components/menu-item-button :: menu-item-button('Funcionários', ~{::#funcionario-icon})}">
+    </button>
+
+    <div x-show="open" x-cloak x-transition class="ml-4 mt-1 space-y-1 border-l border-slate-700 pl-4">
+
+      <th:block th:replace="~{components/menu-item-option :: menu-item-option(
+        'Cadastrar',
+        @{/funcionarios/cadastrar},
+        ~{::#cadastrar-funcionario-icon}
+    )}"></th:block>
+
+      <th:block th:replace="~{components/menu-item-option :: menu-item-option(
+        'Ver funcionários',
+        @{/funcionarios},
+        ~{::#visualizar-funcionarios-icon}
+    )}"></th:block>
+
+    </div>
+  </div>
+
+  <!-- Departamentos -->
+  <div x-data="{ open: false }">
+    <button th:replace="~{components/menu-item-button :: menu-item-button('Departamentos', ~{::#departamento-icon})}">
+    </button>
+
+    <div x-show="open" x-cloak x-transition class="ml-5 mt-1 space-y-1 border-l border-slate-700 pl-4">
+
+      <!-- Futuramente: cadastrar e pesquisar departamentos -->
+
+    </div>
+  </div>
+
+  <!-- Projetos -->
+  <div x-data="{ open: false }">
+    <button th:replace="~{components/menu-item-button :: menu-item-button('Projetos', ~{::#projeto-icon})}">
+    </button>
+
+    <div x-show="open" x-cloak x-transition class="ml-5 mt-1 space-y-1 border-l border-slate-700 pl-4">
+
+      <!-- Futuramente: cadastrar e pesquisar projetos -->
+
+    </div>
+  </div>
+
+  <!-- Conta -->
+  <div x-data="{ open: false }">
+    <button th:replace="~{components/menu-item-button :: menu-item-button('Conta', ~{::#conta-icon})}">
+    </button>
+
+    <div x-show="open" x-cloak x-transition class="ml-5 mt-1 space-y-1 border-l border-slate-700 pl-4">
+
+      <!-- Futuramente: meu perfil, alterar senha e outras configurações -->
+
+    </div>
+  </div>
+
+</div>
+
+<!-- ================================================== -->
+<!-- ÍCONES DO MENU                                     -->
+<!-- ================================================== -->
+
+<!-- Empresas -->
+<svg id="empresa-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+  stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 shrink-0">
+  <path d="M3 21h18" />
+  <path d="M5 21V7l8-4v18" />
+  <path d="M19 21V11l-6-4" />
+  <path d="M9 9v.01M9 12v.01M9 15v.01M9 18v.01" />
+  <path d="M16 13v.01M16 16v.01M16 19v.01" />
+</svg>
+
+<!-- Funcionários -->
+<svg id="funcionario-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+  stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 shrink-0">
+  <path d="M16 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+  <circle cx="10" cy="7" r="4" />
+  <path d="M20 21v-2a4 4 0 0 0-3-3.87" />
+  <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+</svg>
+
+<svg id="cadastrar-funcionario-icon"
+     th:fragment="cadastrar-funcionario-icon"
+     xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 24 24"
+     fill="none"
+     stroke="currentColor"
+     stroke-width="1.8"
+     stroke-linecap="round"
+     stroke-linejoin="round">
+    <circle cx="10" cy="7" r="4"/>
+    <path d="M4 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/>
+    <path d="M19 8v6"/>
+    <path d="M16 11h6"/>
+</svg>
+
+<svg id="visualizar-funcionarios-icon"
+     th:fragment="visualizar-funcionarios-icon"
+     xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 24 24"
+     fill="none"
+     stroke="currentColor"
+     stroke-width="1.8"
+     stroke-linecap="round"
+     stroke-linejoin="round">
+    <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/>
+    <circle cx="12" cy="12" r="3"/>
+</svg>
+
+<!-- Departamentos -->
+<svg id="departamento-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+  stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 shrink-0">
+  <rect x="8" y="3" width="8" height="5" rx="1" />
+  <rect x="2" y="16" width="8" height="5" rx="1" />
+  <rect x="14" y="16" width="8" height="5" rx="1" />
+  <path d="M12 8v4M6 16v-4h12v4" />
+</svg>
+
+<!-- Projetos -->
+<svg id="projeto-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+  stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 shrink-0">
+  <path d="M3 7a2 2 0 0 1 2-2h5l2 2h7a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+  <path d="M8 14h8M8 17h5" />
+</svg>
+
+<!-- Conta -->
+<svg id="conta-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+  stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 shrink-0">
+  <circle cx="12" cy="8" r="4" />
+  <path d="M5 21a7 7 0 0 1 14 0" />
+</svg>
+
+</html>
