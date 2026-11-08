@@ -1,0 +1,39 @@
+<th:block th:fragment="campos">
+
+    <div th:replace="~{components/forms :: inputTexto(
+        textoLabel='Nome completo',
+        nomeAtributo='nome',
+        isValidado=true)}">
+    </div>
+
+    <div th:replace="~{components/forms :: inputTexto(
+        textoLabel='CPF',
+        nomeAtributo='cpf',
+        isValidado=true)}">
+    </div>
+
+    <div th:replace="~{components/forms :: inputEmail(
+        textoLabel='E-mail',
+        nomeAtributo='email',
+        isValidado=true)}">
+    </div>
+
+    <div th:replace="~{components/forms :: inputTexto(
+        textoLabel='Telefone',
+        nomeAtributo='telefone',
+        isValidado=true)}">
+    </div>
+
+    <div th:replace="~{components/forms :: inputTexto(
+        textoLabel='Cargo',
+        nomeAtributo='cargo',
+        isValidado=true)}">
+    </div>
+
+    <div th:replace="~{components/forms :: inputData(
+        textoLabel='Data de admissão',
+        nomeAtributo='dataAdmissao',
+        isValidado=true)}">
+    </div>
+
+</th:block>
