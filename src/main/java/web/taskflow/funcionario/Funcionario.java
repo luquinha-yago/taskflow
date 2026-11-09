@@ -7,8 +7,6 @@ import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.DynamicUpdate;
 import web.taskflow.common.enums.Status;
-import web.taskflow.departamento.Departamento;
-import web.taskflow.empresa.Empresa;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -51,7 +49,7 @@ public class Funcionario implements Serializable {
     @Column(name = "data_admissao")
     @ToString.Include
     private LocalDate dataAdmissao;
-    
+    /*
     @ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "codigo_empresa")
     private Empresa empresa;
@@ -59,7 +57,7 @@ public class Funcionario implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "codigo_departamento")
     private Departamento departamento;
-    
+    */
     @Enumerated(EnumType.STRING)
     @ToString.Include
     private Status status = Status.ATIVO;
