@@ -23,13 +23,13 @@
             null
         )}"></div>
 
-        <form th:hx-put="@{/funcionarios/{id}(id=${id})}"
+        <form th:hx-put="@{/funcionarios/{codigo}(codigo=${codigo})}"
               th:object="${funcionarioUpdateRequest}"
               class="w-full max-w-2xl">
 
             <div th:replace="~{components/forms :: campoEstatico(
                 textoLabel='Código',
-                textoExibicao=${id})}">
+                textoExibicao=${codigo})}">
             </div>
 
             <div th:replace="~{funcionarios/fragments/funcionario_inputs :: campos}">
