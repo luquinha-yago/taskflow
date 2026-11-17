@@ -4,6 +4,13 @@
 <div th:fragment="menu" class="space-y-2" hx-get="/layout/menu-atualizado" hx-trigger="atualizarAuth from:body"
   hx-target="this">
 
+  <!-- Início -->
+  <th:block th:replace="~{components/menu-item-option :: menu-item-option(
+      'Início',
+      @{/inicio},
+      ~{::#inicio-icon}
+  )}"></th:block>
+  
   <!-- Empresas -->
   <div x-data="{ open: false }">
     <button th:replace="~{components/menu-item-button :: menu-item-button('Empresas', ~{::#empresa-icon})}">
@@ -62,6 +69,24 @@
     </div>
   </div>
 
+  <!-- Relatórios -->
+  <div x-data="{ open: false }">
+
+      <button th:replace="~{components/menu-item-button :: menu-item-button('Relatórios', ~{::#relatorios-icon})}">
+      </button>
+
+      <div x-show="open" x-cloak x-transition
+          class="ml-4 mt-1 space-y-1 border-l border-slate-700 pl-4">
+
+          <th:block th:replace="~{components/menu-item-option :: menu-item-option(
+              'Visualizar relatórios',
+              @{/relatorios},
+              ~{::#visualizar-relatorios-icon}
+          )}"></th:block>
+
+      </div>
+  </div>
+
   <!-- Conta -->
   <div x-data="{ open: false }">
     <button th:replace="~{components/menu-item-button :: menu-item-button('Conta', ~{::#conta-icon})}">
@@ -79,6 +104,18 @@
 <!-- ================================================== -->
 <!-- ÍCONES DO MENU                                     -->
 <!-- ================================================== -->
+
+<!-- Início -->
+<svg id="inicio-icon" xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 24 24" fill="none" stroke="currentColor"
+     stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"
+     class="h-5 w-5 shrink-0">
+
+    <path d="m3 10 9-7 9 7" />
+    <path d="M5 9v11h14V9" />
+    <path d="M9 20v-6h6v6" />
+
+</svg>
 
 <!-- Empresas -->
 <svg id="empresa-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -141,6 +178,32 @@
   stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 shrink-0">
   <path d="M3 7a2 2 0 0 1 2-2h5l2 2h7a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
   <path d="M8 14h8M8 17h5" />
+</svg>
+
+<!-- Relatórios -->
+<svg id="relatorios-icon" xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 24 24" fill="none" stroke="currentColor"
+     stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"
+     class="h-5 w-5 shrink-0">
+
+    <path d="M3 3v18h18" />
+    <path d="m19 9-5 5-4-4-5 5" />
+
+</svg>
+
+<!-- Visualizar relatórios -->
+<svg id="visualizar-relatorios-icon" xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 24 24" fill="none" stroke="currentColor"
+     stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"
+     class="h-5 w-5 shrink-0">
+
+    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+    <path d="M14 2v6h6" />
+    <path d="M8 13h2" />
+    <path d="M8 17h2" />
+    <path d="M14 13h2" />
+    <path d="M14 17h2" />
+
 </svg>
 
 <!-- Conta -->
