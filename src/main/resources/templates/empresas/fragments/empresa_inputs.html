@@ -1,0 +1,39 @@
+<th:block th:fragment="campos">
+
+    <div th:replace="~{components/forms :: inputTexto(
+        textoLabel='Razão Social',
+        nomeAtributo='razaoSocial',
+        isValidado=true)}">
+    </div>
+
+    <div th:replace="~{components/forms :: inputTexto(
+        textoLabel='Nome Fantasia',
+        nomeAtributo='nomeFantasia',
+        isValidado=true)}">
+    </div>
+
+    <div th:replace="~{components/forms :: inputTexto(
+        textoLabel='CNPJ',
+        nomeAtributo='cnpj',
+        isValidado=true)}">
+    </div>
+
+    <div th:replace="~{components/forms :: inputEmail(
+        textoLabel='E-mail',
+        nomeAtributo='email',
+        isValidado=true)}">
+    </div>
+
+    <div th:replace="~{components/forms :: inputTexto(
+        textoLabel='Telefone',
+        nomeAtributo='telefone',
+        isValidado=true)}">
+    </div>
+
+    <div th:replace="~{components/forms :: inputTexto(
+        textoLabel='Endereço',
+        nomeAtributo='endereco',
+        isValidado=true)}">
+    </div>
+
+</th:block>
