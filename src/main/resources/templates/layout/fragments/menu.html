@@ -18,7 +18,29 @@
 
     <div x-show="open" x-cloak x-transition class="ml-5 mt-1 space-y-1 border-l border-slate-700 pl-4">
 
-      <!-- Futuramente: cadastrar e pesquisar empresas -->
+      <th:block th:replace="~{components/menu-item-option :: menu-item-option(
+        'Cadastrar',
+        @{/empresas/cadastrar},
+        ~{::#cadastrar-funcionario-icon}
+    )}"></th:block>
+
+      <th:block th:replace="~{components/menu-item-option :: menu-item-option(
+        'Ver empresas',
+        @{/empresas},
+        ~{::#visualizar-funcionarios-icon}
+    )}"></th:block>
+
+    </div>
+  </div>
+
+  <!-- Departamentos -->
+  <div x-data="{ open: false }">
+    <button th:replace="~{components/menu-item-button :: menu-item-button('Departamentos', ~{::#departamento-icon})}">
+    </button>
+
+    <div x-show="open" x-cloak x-transition class="ml-5 mt-1 space-y-1 border-l border-slate-700 pl-4">
+
+      <!-- Futuramente: cadastrar e pesquisar departamentos -->
 
     </div>
   </div>
@@ -41,18 +63,6 @@
         @{/funcionarios},
         ~{::#visualizar-funcionarios-icon}
     )}"></th:block>
-
-    </div>
-  </div>
-
-  <!-- Departamentos -->
-  <div x-data="{ open: false }">
-    <button th:replace="~{components/menu-item-button :: menu-item-button('Departamentos', ~{::#departamento-icon})}">
-    </button>
-
-    <div x-show="open" x-cloak x-transition class="ml-5 mt-1 space-y-1 border-l border-slate-700 pl-4">
-
-      <!-- Futuramente: cadastrar e pesquisar departamentos -->
 
     </div>
   </div>
