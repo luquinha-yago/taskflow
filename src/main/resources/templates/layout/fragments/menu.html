@@ -18,7 +18,29 @@
 
     <div x-show="open" x-cloak x-transition class="ml-5 mt-1 space-y-1 border-l border-slate-700 pl-4">
 
-      <!-- Futuramente: cadastrar e pesquisar empresas -->
+      <th:block th:replace="~{components/menu-item-option :: menu-item-option(
+        'Cadastrar',
+        @{/empresas/cadastrar},
+        ~{::#cadastrar-empresa-icon}
+    )}"></th:block>
+
+      <th:block th:replace="~{components/menu-item-option :: menu-item-option(
+        'Ver empresas',
+        @{/empresas},
+        ~{::#visualizar-empresas-icon}
+    )}"></th:block>
+
+    </div>
+  </div>
+
+  <!-- Departamentos -->
+  <div x-data="{ open: false }">
+    <button th:replace="~{components/menu-item-button :: menu-item-button('Departamentos', ~{::#departamento-icon})}">
+    </button>
+
+    <div x-show="open" x-cloak x-transition class="ml-5 mt-1 space-y-1 border-l border-slate-700 pl-4">
+
+      <!-- Futuramente: cadastrar e pesquisar departamentos -->
 
     </div>
   </div>
@@ -41,18 +63,6 @@
         @{/funcionarios},
         ~{::#visualizar-funcionarios-icon}
     )}"></th:block>
-
-    </div>
-  </div>
-
-  <!-- Departamentos -->
-  <div x-data="{ open: false }">
-    <button th:replace="~{components/menu-item-button :: menu-item-button('Departamentos', ~{::#departamento-icon})}">
-    </button>
-
-    <div x-show="open" x-cloak x-transition class="ml-5 mt-1 space-y-1 border-l border-slate-700 pl-4">
-
-      <!-- Futuramente: cadastrar e pesquisar departamentos -->
 
     </div>
   </div>
@@ -125,6 +135,48 @@
   <path d="M19 21V11l-6-4" />
   <path d="M9 9v.01M9 12v.01M9 15v.01M9 18v.01" />
   <path d="M16 13v.01M16 16v.01M16 19v.01" />
+</svg>
+
+<svg id="cadastrar-empresa-icon"
+     th:fragment="cadastrar-empresa-icon"
+     xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 24 24"
+     fill="none"
+     stroke="currentColor"
+     stroke-width="1.8"
+     stroke-linecap="round"
+     stroke-linejoin="round">
+
+    <path d="M3 21h18"/>
+    <path d="M5 21V7l8-4v18"/>
+    <path d="M13 10h6v11"/>
+    <path d="M8 9h1"/>
+    <path d="M8 13h1"/>
+    <path d="M8 17h1"/>
+    <path d="M16 14v4"/>
+    <path d="M14 16h4"/>
+
+</svg>
+
+<svg id="visualizar-empresas-icon"
+     th:fragment="visualizar-empresas-icon"
+     xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 24 24"
+     fill="none"
+     stroke="currentColor"
+     stroke-width="1.8"
+     stroke-linecap="round"
+     stroke-linejoin="round">
+
+    <path d="M3 21h18"/>
+    <path d="M5 21V7l8-4v18"/>
+    <path d="M13 10h6v11"/>
+    <path d="M8 9h1"/>
+    <path d="M8 13h1"/>
+    <path d="M8 17h1"/>
+    <path d="M16 14h1"/>
+    <path d="M16 17h1"/>
+
 </svg>
 
 <!-- Funcionários -->

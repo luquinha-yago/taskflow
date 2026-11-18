@@ -80,3 +80,61 @@
 .colored-toast .swal2-html-container {
   color: white;
 }
+
+/* ========================================
+   SWEETALERT2 - TEMA DARK TASKFLOW
+======================================== */
+
+.taskflow-swal-popup {
+    background-color: #172235 !important;
+    border: 1px solid #334155 !important;
+    border-radius: 16px !important;
+    color: #f8fafc !important;
+    box-shadow: 0 20px 50px rgb(0 0 0 / 40%) !important;
+}
+
+.taskflow-swal-title {
+    color: #f8fafc !important;
+    font-size: 1.35rem !important;
+    font-weight: 700 !important;
+}
+
+.taskflow-swal-text {
+    color: #cbd5e1 !important;
+    font-size: 0.95rem !important;
+}
+
+.taskflow-swal-popup .swal2-icon.swal2-warning {
+    border-color: #f59e0b !important;
+    color: #f59e0b !important;
+}
+
+.taskflow-swal-confirm,
+.taskflow-swal-cancel {
+    border: none !important;
+    border-radius: 7px !important;
+    padding: 10px 18px !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    cursor: pointer !important;
+    transition: background-color 0.2s ease !important;
+}
+
+.taskflow-swal-confirm {
+    background-color: #3478f6 !important;
+    color: #ffffff !important;
+}
+
+.taskflow-swal-confirm:hover {
+    background-color: #2563eb !important;
+}
+
+.taskflow-swal-cancel {
+    background-color: #334155 !important;
+    color: #e2e8f0 !important;
+    margin-left: 8px !important;
+}
+
+.taskflow-swal-cancel:hover {
+    background-color: #475569 !important;
+}
