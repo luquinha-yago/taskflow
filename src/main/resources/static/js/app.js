@@ -520,10 +520,22 @@ class AppVacinacao {
             title: AppVacinacao.CONFIG.texto.tituloConfirm,
             text: mensagem,
             icon: "warning",
+
             showCancelButton: true,
+
             cancelButtonText: AppVacinacao.CONFIG.texto.cancelar,
             confirmButtonText: AppVacinacao.CONFIG.texto.remover,
-            confirmButtonColor: "#3085d6",
+
+            buttonsStyling: false,
+
+            customClass: {
+                popup: "taskflow-swal-popup",
+                title: "taskflow-swal-title",
+                htmlContainer: "taskflow-swal-text",
+                confirmButton: "taskflow-swal-confirm",
+                cancelButton: "taskflow-swal-cancel"
+            }
+
         }).then((result) => {
             if (result.isConfirmed) {
                 e.detail.issueRequest();
