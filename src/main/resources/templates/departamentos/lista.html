@@ -47,34 +47,44 @@
                 </div>
 
                 <div>
-                    <div th:replace="~{components/forms :: inputTexto(
-                        textoLabel='Descrição',
-                        nomeAtributo='descricao',
-                        valorAtributo=*{descricao})}">
-                    </div>
-                </div>
-
-                <div>
-                    <div th:replace="~{components/forms :: inputTexto(
+                    <div th:replace="~{components/forms :: inputBuscavel(
                         textoLabel='Empresa',
-                        nomeAtributo='empresa',
-                        valorAtributo=*{empresa})}">
+                        nomeAtributo='codigoEmpresa',
+                        valorAtributo=*{codigoEmpresa},
+                        nomeAtributoTexto='nomeEmpresa',
+                        valorAtributoTexto=*{nomeEmpresa},
+                        urlBusca='/departamentos/pesquisarempresa',
+                        placeholderBusca='Digite ao menos 3 letras...',
+                        isValidado=true)}">
                     </div>
                 </div>
 
                 <div>
-                    <div th:replace="~{components/forms :: inputTexto(
-                        textoLabel='Coordenador',
-                        nomeAtributo='funcionario_coordenador',
-                        valorAtributo=*{funcionario_coordenador})}">
+                    <div th:replace="~{components/forms :: inputBuscavel(
+                        textoLabel='Funcionário coordenador',
+                        nomeAtributo='codigoFuncionarioCoordenador',
+                        valorAtributo=*{codigoFuncionarioCoordenador},
+                        nomeAtributoTexto='nomeFuncionarioCoordenador',
+                        valorAtributoTexto=*{nomeFuncionarioCoordenador},
+                        urlBusca='/departamentos/pesquisarfuncionario',
+                        placeholderBusca='Digite ao menos 3 letras...',
+                        isValidado=true)}">
                     </div>
                 </div>
 
                 <div>
                     <div th:replace="~{components/forms :: inputData(
-                        textoLabel='Data de criação',
-                        nomeAtributo='data_criacao',
-                        valorAtributo=*{data_criacao})}">
+                        textoLabel='Data de Criação Inicial',
+                        nomeAtributo='dataCriacaoInicial',
+                        valorAtributo=*{dataCriacaoInicial})}">
+                    </div>
+                </div>
+
+                <div>
+                    <div th:replace="~{components/forms :: inputData(
+                        textoLabel='Data de Criação Final',
+                        nomeAtributo='dataCriacaoFinal',
+                        valorAtributo=*{dataCriacaoFinal})}">
                     </div>
                 </div>
 
@@ -156,15 +166,15 @@
                                     class="px-6 py-4 text-sm text-slate-300 max-w-xs truncate">
                                 </td>
 
-                                <td th:text="${departamento.empresa}"
+                                <td th:text="${departamento.nomeEmpresa}"
                                     class="px-6 py-4 whitespace-nowrap text-sm text-slate-300">
                                 </td>
 
-                                <td th:text="${departamento.funcionario_coordenador}"
+                                <td th:text="${departamento.nomeFuncionarioCoordenador}"
                                     class="px-6 py-4 whitespace-nowrap text-sm text-slate-300">
                                 </td>
 
-                                <td th:text="${#temporals.format(departamento.data_criacao, 'dd/MM/yyyy')}"
+                                <td th:text="${#temporals.format(departamento.dataCriacao, 'dd/MM/yyyy')}"
                                     class="px-6 py-4 whitespace-nowrap text-sm text-slate-300">
                                 </td>
 
