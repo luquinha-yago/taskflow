@@ -10,5 +10,5 @@ CREATE TABLE public.departamento (
 );
 
 ALTER TABLE public.departamento
-    ADD FOREIGN KEY (codigo_funcionario_coordenador) REFERENCES public.funcionario (codigo),
-    ADD FOREIGN KEY (codigo_empresa) REFERENCES public.empresa (codigo);
+    ADD FOREIGN KEY (funcionario_coordenador_id) REFERENCES public.funcionario (codigo),
+    ADD FOREIGN KEY (empresa_id) REFERENCES public.empresa (codigo);
