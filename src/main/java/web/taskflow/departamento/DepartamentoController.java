@@ -54,7 +54,13 @@ public class DepartamentoController {
                             HtmxRequest htmxRequest) {
         if (resultado.hasErrors()) {
             log.info("O departamento para cadastrar não é válido.");
-            logarErros(resultado);
+            log.info("Erros encontrados:");
+            for (FieldError erro : resultado.getFieldErrors()) {
+                log.info("{}", erro);
+            }
+            for (ObjectError erro : resultado.getGlobalErrors()) {
+                log.info("{}", erro);
+            }
             return htmxRequest.isHtmxRequest() ? "departamentos/create :: formulario" : "departamentos/create";
         } else {
             departamentoService.salvar(form);
@@ -102,7 +108,13 @@ public class DepartamentoController {
                          HtmxRequest htmxRequest) {
         if (resultado.hasErrors()) {
             log.info("O departamento recebido para editar não é válido.");
-            logarErros(resultado);
+            log.info("Erros encontrados:");
+            for (FieldError erro : resultado.getFieldErrors()) {
+                log.info("{}", erro);
+            }
+            for (ObjectError erro : resultado.getGlobalErrors()) {
+                log.info("{}", erro);
+            }
             model.addAttribute("codigo", codigo);
             return htmxRequest.isHtmxRequest() ? "departamentos/edit :: formulario" : "departamentos/edit";
         } else {
@@ -139,15 +151,5 @@ public class DepartamentoController {
                                     Model model) {
         model.addAttribute("funcionarios", departamentoService.buscarOpcoesFuncionario(termo));
         return "departamentos/fragments/opcoes :: opcoesFuncionario";
-    }
-
-    private void logarErros(BindingResult resultado) {
-        log.info("Erros encontrados:");
-        for (FieldError erro : resultado.getFieldErrors()) {
-            log.info("{}", erro);
-        }
-        for (ObjectError erro : resultado.getGlobalErrors()) {
-            log.info("{}", erro);
-        }
     }
 }
