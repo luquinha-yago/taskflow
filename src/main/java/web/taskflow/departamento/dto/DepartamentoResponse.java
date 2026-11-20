@@ -6,7 +6,7 @@ public record DepartamentoResponse(
         Long codigo,
         String nome,
         String descricao,
-        LocalDate data_criacao,
+        LocalDate dataCriacao,
         Long codigoEmpresa,
         String nomeEmpresa,
         Long codigoFuncionarioCoordenador,
