@@ -52,16 +52,16 @@ Boas práticas:
 
 ## 4. Fluxo recomendado
 
-Os exemplos abaixo consideram que a branch principal se chama `main`. Se o projeto usa outro nome, substitua `main` pelo nome correto.
+Neste projeto, considere `develop` como a branch de integração do trabalho da equipe e `main` como a branch principal/estável. As novas funcionalidades e correções devem, em geral, sair de `develop` e abrir PR com destino a `develop`. Se o repositório não usar esse fluxo, adapte os nomes das branches.
 
 ### A. Atualizar a branch principal
 
 ```bash
-git switch main
-git pull origin main
+git switch develop
+git pull origin develop
 ```
 
-Atualiza sua cópia local com as mudanças do repositório remoto.
+Atualiza sua cópia local de `develop` com as mudanças do repositório remoto. Faça isso antes de criar uma branch para uma nova tarefa.
 
 ### B. Criar uma branch para a tarefa
 
@@ -103,17 +103,17 @@ Publica a branch remota. O `-u` configura o acompanhamento para facilitar os pr�
 
 ### F. Abrir a Pull Request
 
-No GitHub, abra uma PR da sua branch para `main` e preencha o modelo disponível em `.github/PULL_REQUEST_TEMPLATE.md`. Revise o resumo, os testes e os arquivos alterados antes de solicitar revisão.
+No GitHub, abra uma PR da sua branch para `develop` e preencha o modelo disponível em `.github/PULL_REQUEST_TEMPLATE.md`. Revise o resumo, os testes e os arquivos alterados antes de solicitar revisão.
 
 ### G. Depois do merge
 
 ```bash
-git switch main
-git pull origin main
+git switch develop
+git pull origin develop
 git branch -d feat/nome-da-tarefa
 ```
 
-Atualiza a `main` local e apaga a branch local já integrada. Só apague branches que não tenham trabalho pendente. A exclusão local não apaga a branch remota.
+Atualiza a `develop` local e apaga a branch local já integrada. Só apague branches que não tenham trabalho pendente. A exclusão local não apaga a branch remota.
 
 ## 5. Outros comandos úteis
 
@@ -125,6 +125,7 @@ Atualiza a `main` local e apaga a branch local já integrada. Só apague branche
 | `git log --oneline -10` | Mostra os últimos 10 commits de forma resumida. |
 | `git diff --staged` | Mostra o que está preparado para o próximo commit. |
 | `git fetch origin` | Busca informações novas do remoto sem integrar mudanças na branch atual. |
+| `git switch --track origin/nome-da-branch` | Cria uma branch local acompanhando a branch remota e muda para ela. |
 | `git pull origin main` | Busca e integra as atualizações remotas de `main` na branch atual. Use estando na branch que deseja atualizar. |
 | `git restore caminho/do/arquivo` | Descarta alterações locais não preparadas naquele arquivo. **Use com cuidado: pode perder trabalho.** |
 | `git restore --staged caminho/do/arquivo` | Remove o arquivo da área de stage, mas mantém as alterações no disco. |
@@ -132,19 +133,99 @@ Atualiza a `main` local e apaga a branch local já integrada. Só apague branche
 | `git stash pop` | Tenta reaplicar as alterações guardadas mais recentemente. |
 | `git show --stat` | Mostra o resumo do commit mais recente. |
 
-### Se houver mudanças novas em `main` enquanto você trabalha
+### Se houver mudanças novas em `develop` enquanto você trabalha
 
 Uma opção simples é atualizar sua branch com merge:
 
 ```bash
 git fetch origin
 git switch feat/nome-da-tarefa
-git merge origin/main
+git merge origin/develop
 ```
 
 Se houver conflitos, resolva os arquivos indicados, teste o projeto e finalize o merge conforme o Git solicitar. Não execute comandos de reset ou limpeza sem entender o efeito.
 
-## 6. Antes de abrir uma PR
+
+## 6. Baixar uma branch remota e revisar uma PR
+
+Quando alguém criar uma branch no GitHub (por exemplo, `develop` ou `feat/cadastro-empresa`), ela ainda pode não existir no seu computador. Primeiro, atualize a lista de branches remotas:
+
+```bash
+git fetch origin
+git branch -r
+```
+
+O comando `git branch -r` deve mostrar branches como `origin/develop` e `origin/feat/cadastro-empresa`.
+
+### A. Trazer a `develop` para o projeto local pela primeira vez
+
+Se ainda não existir uma `develop` local:
+
+```bash
+git switch --track origin/develop
+```
+
+Isso cria a branch local `develop`, configura o acompanhamento de `origin/develop` e já muda para ela. Depois, confira:
+
+```bash
+git branch -vv
+git status
+```
+
+Se a branch `develop` já existir localmente, apenas mude para ela e atualize:
+
+```bash
+git switch develop
+git pull origin develop
+```
+
+Antes de trocar de branch, confira `git status` e faça commit ou guarde (`git stash`) alterações locais que não queira levar para outra branch.
+
+### B. Baixar uma branch remota para fazer review
+
+Para revisar uma PR de outra pessoa, primeiro atualize as referências remotas e crie uma branch local acompanhando a branch da PR. Exemplo:
+
+```bash
+git fetch origin
+git switch --track origin/feat/cadastro-empresa
+```
+
+Substitua `feat/cadastro-empresa` pelo nome exato da branch que aparece na PR do GitHub. Se a branch local já existir, use `git switch feat/cadastro-empresa` e depois `git pull`.
+
+### C. Conferir as alterações da PR
+
+Com a branch da PR selecionada, confira os arquivos e diferenças em relação à `develop`:
+
+```bash
+git status
+git log --oneline origin/develop..HEAD
+git diff origin/develop...HEAD
+```
+
+- `git log`: lista os commits da branch que não estão em `develop`.
+- `git diff`: mostra as alterações da PR em relação à base `develop`.
+- Abra o projeto, execute a aplicação e rode os testes pertinentes para validar o que foi alterado.
+
+A revisão no Git local serve para inspecionar e testar o código. Comentários, aprovação e merge da PR continuam sendo feitos no GitHub, conforme o processo da equipe.
+
+### D. Depois do review
+
+Quando terminar, volte para `develop` e atualize:
+
+```bash
+git switch develop
+git pull origin develop
+```
+
+Se não precisar mais da cópia local da branch revisada, você pode apagá-la:
+
+```bash
+git branch -d feat/cadastro-empresa
+```
+
+Esse comando apaga somente a branch local. Não apaga a branch da outra pessoa no GitHub. Se o Git impedir a exclusão, não force com `-D` sem confirmar que não há trabalho local que precise ser preservado.
+
+## 7. Antes de abrir uma PR
 
 - [ ] A branch tem um nome claro.
 - [ ] A PR trata de uma tarefa principal.
@@ -154,7 +235,7 @@ Se houver conflitos, resolva os arquivos indicados, teste o projeto e finalize o
 - [ ] A descrição explica o problema e a solução.
 - [ ] Relacionei uma Issue, se existir e for relevante.
 
-## 7. Estrutura sugerida
+## 8. Estrutura sugerida
 
 ```text
 projeto/
@@ -167,6 +248,6 @@ projeto/
 
 A pasta `src/` é apenas um exemplo: mantenha a estrutura real do seu projeto.
 
-## 8. Regra de ouro
+## 9. Regra de ouro
 
 **Uma tarefa por branch, commits claros e uma PR fácil de entender.** Para um projeto pequeno, isso já ajuda bastante. Ajustem estas convenções se a equipe tiver um padrão próprio.
