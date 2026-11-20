@@ -1,6 +1,7 @@
 package web.taskflow.empresa;
 
 import java.time.LocalDate;
+import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -53,6 +54,12 @@ public class EmpresaService {
                 "A data inicial não pode ser posterior à data final."
             );
         }
+    }
+
+    public List<EmpresaResponse> buscarPeloNome(String nome) {
+        return empresaRepository.findTop10ByNomeFantasiaContainingIgnoreCaseAndStatusOrderByNomeFantasiaAsc(nome, Status.ATIVO).stream()
+            .map(this::toResponse)
+            .toList();
     }
 
     public EmpresaUpdateRequest buscarParaEdicao(Long codigo) {

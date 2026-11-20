@@ -1,5 +1,6 @@
 package web.taskflow.funcionario;
 
+import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -52,6 +53,12 @@ public class FuncionarioService {
                 "A data inicial não pode ser posterior à data final."
             );
         }
+    }
+
+    public List<FuncionarioResponse> buscarPeloNome(String nome) {
+        return funcionarioRepository.findTop10ByNomeContainingIgnoreCaseAndStatusOrderByNomeAsc(nome, Status.ATIVO).stream()
+            .map(this::toResponse)
+            .toList();
     }
 
     public FuncionarioUpdateRequest buscarParaEdicao(Long codigo) {
