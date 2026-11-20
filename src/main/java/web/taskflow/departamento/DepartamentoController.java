@@ -1,9 +1,6 @@
 package web.taskflow.departamento;
 
-import io.github.wimdeblauwe.htmx.spring.boot.mvc.HtmxRequest;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.validation.Valid;
-import lombok.extern.slf4j.Slf4j;
+import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -20,8 +17,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import io.github.wimdeblauwe.htmx.spring.boot.mvc.HtmxRequest;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import web.taskflow.core.web.notification.NotificacaoSweetAlert2;
 import web.taskflow.core.web.notification.TipoNotificacaoSweetAlert2;
 import web.taskflow.core.web.pagination.PageWrapper;
@@ -29,6 +29,10 @@ import web.taskflow.departamento.dto.DepartamentoCreateRequest;
 import web.taskflow.departamento.dto.DepartamentoResponse;
 import web.taskflow.departamento.dto.DepartamentoSearchRequest;
 import web.taskflow.departamento.dto.DepartamentoUpdateRequest;
+import web.taskflow.empresa.EmpresaService;
+import web.taskflow.empresa.dto.EmpresaResponse;
+import web.taskflow.funcionario.FuncionarioService;
+import web.taskflow.funcionario.dto.FuncionarioResponse;
 
 @Slf4j
 @Controller
@@ -36,9 +40,15 @@ import web.taskflow.departamento.dto.DepartamentoUpdateRequest;
 public class DepartamentoController {
 
     private final DepartamentoService departamentoService;
+    private final EmpresaService empresaService;
+    private final FuncionarioService funcionarioService;
 
-    public DepartamentoController(DepartamentoService departamentoService) {
+    public DepartamentoController(DepartamentoService departamentoService,
+                                  EmpresaService empresaService,
+                                  FuncionarioService funcionarioService) {
         this.departamentoService = departamentoService;
+        this.empresaService = empresaService;
+        this.funcionarioService = funcionarioService;
     }
 
     @GetMapping("/cadastrar")
@@ -137,19 +147,20 @@ public class DepartamentoController {
         return htmxRequest.isHtmxRequest() ? "redirect:htmx:location:/departamentos" : "redirect:/departamentos";
     }
 
-    /** Opções do campo "Empresa" (inputBuscavel) nos formulários de departamento. */
-    @GetMapping("/opcoes/empresas")
-    public String opcoesEmpresa(@RequestParam(name = "termoBusca", required = false) String termo,
-                                Model model) {
-        model.addAttribute("empresas", departamentoService.buscarOpcoesEmpresa(termo));
-        return "departamentos/fragments/opcoes :: opcoesEmpresa";
+    @GetMapping("/pesquisarempresa")
+    public String pesquisarEmpresa(String termoBusca, Model model) {
+        List<EmpresaResponse> empresas = empresaService.buscarPeloNome(termoBusca);
+        log.debug("Empresas buscadas: {}", empresas);
+        model.addAttribute("empresas", empresas);
+        return "empresas/list_li :: lista";
     }
 
-    /** Opções do campo "Coordenador" (inputBuscavel) nos formulários de departamento. */
-    @GetMapping("/opcoes/funcionarios")
-    public String opcoesFuncionario(@RequestParam(name = "termoBusca", required = false) String termo,
-                                    Model model) {
-        model.addAttribute("funcionarios", departamentoService.buscarOpcoesFuncionario(termo));
-        return "departamentos/fragments/opcoes :: opcoesFuncionario";
+    @GetMapping("/pesquisarfuncionario")
+    public String pesquisarFuncionario(String termoBusca, Model model) {
+        List<FuncionarioResponse> funcionarios = funcionarioService.buscarPeloNome(termoBusca);
+        log.debug("Funcionarios buscados: {}", funcionarios);
+        model.addAttribute("funcionarios", funcionarios);
+        return "funcionarios/list_li :: lista";
     }
+
 }
