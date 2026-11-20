@@ -13,10 +13,14 @@ public record DepartamentoSearchRequest(
         LocalDate dataCriacaoFinal
 ){
     public boolean isEmpty() {
-        return codigo == null && (nome == null || nome.isBlank())
-                && codigoEmpresa == null
-                && codigoFuncionarioCoordenador == null
-                && dataCriacaoInicial == null
-                && dataCriacaoFinal == null;
+        return codigo == null
+            && (nome == null || nome.isBlank())
+            && codigoEmpresa == null
+            && (nomeEmpresa == null || nomeEmpresa.isBlank())
+            && codigoFuncionarioCoordenador == null
+            && (nomeFuncionarioCoordenador == null
+                || nomeFuncionarioCoordenador.isBlank())
+            && dataCriacaoInicial == null
+            && dataCriacaoFinal == null;
     }
 }
