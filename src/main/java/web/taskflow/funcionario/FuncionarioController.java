@@ -1,5 +1,6 @@
 package web.taskflow.funcionario;
 
+import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -24,6 +25,10 @@ import lombok.extern.slf4j.Slf4j;
 import web.taskflow.core.web.notification.NotificacaoSweetAlert2;
 import web.taskflow.core.web.notification.TipoNotificacaoSweetAlert2;
 import web.taskflow.core.web.pagination.PageWrapper;
+import web.taskflow.departamento.DepartamentoService;
+import web.taskflow.departamento.dto.DepartamentoResponse;
+import web.taskflow.empresa.EmpresaService;
+import web.taskflow.empresa.dto.EmpresaResponse;
 import web.taskflow.funcionario.dto.FuncionarioCreateRequest;
 import web.taskflow.funcionario.dto.FuncionarioResponse;
 import web.taskflow.funcionario.dto.FuncionarioSearchRequest;
@@ -35,9 +40,15 @@ import web.taskflow.funcionario.dto.FuncionarioUpdateRequest;
 public class FuncionarioController {
 
     private final FuncionarioService funcionarioService;
+    private final EmpresaService empresaService;
+    private final DepartamentoService departamentoService;
 
-    public FuncionarioController(FuncionarioService funcionarioService){
+    public FuncionarioController(FuncionarioService funcionarioService,
+                                 EmpresaService empresaService,
+                                 DepartamentoService departamentoService){
         this.funcionarioService = funcionarioService;
+        this.empresaService = empresaService;
+        this.departamentoService = departamentoService;
     }
 
     @GetMapping("/cadastrar")
@@ -132,5 +143,21 @@ public class FuncionarioController {
                 new NotificacaoSweetAlert2("Funcionário removido com sucesso!",
                         TipoNotificacaoSweetAlert2.SUCCESS, 4000));
         return htmxRequest.isHtmxRequest() ? "redirect:htmx:location:/funcionarios" : "redirect:/funcionarios";
+    }
+
+    @GetMapping("/pesquisarempresa")
+    public String pesquisarEmpresa(String termoBusca, Model model) {
+        List<EmpresaResponse> empresas = empresaService.buscarPeloNome(termoBusca);
+        log.debug("Empresas buscadas: {}", empresas);
+        model.addAttribute("empresas", empresas);
+        return "empresas/list_li :: lista";
+    }
+
+    @GetMapping("/pesquisardepartamento")
+    public String pesquisarDepartamento(String termoBusca, Model model) {
+        List<DepartamentoResponse> departamento = departamentoService.buscarPeloNome(termoBusca);
+        log.debug("Departamentos buscados: {}", departamento);
+        model.addAttribute("departamentos", departamento);
+        return "departamentos/list_li :: lista";
     }
 }
