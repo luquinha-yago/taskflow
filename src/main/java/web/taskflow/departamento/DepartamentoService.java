@@ -1,10 +1,8 @@
 package web.taskflow.departamento;
 
-import lombok.RequiredArgsConstructor;
+import java.time.LocalDate;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import web.taskflow.common.enums.Status;
@@ -15,114 +13,88 @@ import web.taskflow.departamento.dto.DepartamentoSearchRequest;
 import web.taskflow.departamento.dto.DepartamentoUpdateRequest;
 import web.taskflow.empresa.Empresa;
 import web.taskflow.empresa.EmpresaRepository;
-import web.taskflow.empresa.dto.EmpresaResponse;
 import web.taskflow.funcionario.Funcionario;
 import web.taskflow.funcionario.FuncionarioRepository;
-import web.taskflow.funcionario.dto.FuncionarioResponse;
-
-import java.time.LocalDate;
-import java.util.List;
 
 @Service
-@RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class DepartamentoService {
 
-    private static final int LIMITE_OPCOES = 10;
-
-    private final DepartamentoRepository repository;
+    private final DepartamentoRepository departamentoRepository;
     private final EmpresaRepository empresaRepository;
     private final FuncionarioRepository funcionarioRepository;
 
+    public DepartamentoService(DepartamentoRepository departamentoRepository,
+                               EmpresaRepository empresaRepository,
+                               FuncionarioRepository funcionarioRepository) {
+        this.departamentoRepository = departamentoRepository;
+        this.empresaRepository = empresaRepository;
+        this.funcionarioRepository = funcionarioRepository;
+    }
+
     @Transactional
     public void salvar(DepartamentoCreateRequest form) {
-        repository.save(toEntity(form));
+        departamentoRepository.save(toEntity(form));
     }
 
-    @Transactional(readOnly = true)
-    public Page<DepartamentoResponse> pesquisar(DepartamentoSearchRequest filtro, Pageable pageable) {
-        return repository
-                .findAll(DepartamentoSpecifications.filtrar(filtro), pageable)
-                .map(DepartamentoService::toResponse);
+    public Page<DepartamentoResponse> pesquisar(
+        DepartamentoSearchRequest filtro,
+        Pageable pageable) {
+
+        validarPeriodo(filtro);
+
+        return departamentoRepository
+                .findAll(
+                    DepartamentoSpecifications.filtrar(filtro),
+                    pageable
+                )
+                .map(this::toResponse);
     }
 
-    @Transactional(readOnly = true)
+    private void validarPeriodo(DepartamentoSearchRequest filtro) {
+
+        if (filtro == null) {
+            return;
+        }
+
+        if (filtro.dataCriacaoInicial() != null
+                && filtro.dataCriacaoFinal() != null
+                && filtro.dataCriacaoInicial()
+                    .isAfter(filtro.dataCriacaoFinal())) {
+
+            throw new IllegalArgumentException(
+                "A data inicial não pode ser posterior à data final."
+            );
+        }
+    }
+
     public DepartamentoUpdateRequest buscarParaEdicao(Long codigo) {
-        return toUpdateRequest(buscarAtivo(codigo));
+        Departamento departamento = departamentoRepository.findByCodigoAndStatus(codigo, Status.ATIVO)
+        .orElseThrow(() -> new EntidadeNaoEncontradaException("Departamento não encontrado."));
+        return toUpdateRequest(departamento);
     }
 
     @Transactional
     public void atualizar(Long codigo, DepartamentoUpdateRequest request) {
-        Departamento departamento = buscarAtivo(codigo);
+        Departamento departamento = departamentoRepository.findByCodigoAndStatus(codigo, Status.ATIVO)
+        .orElseThrow(() -> new EntidadeNaoEncontradaException("Departamento não encontrado."));
         departamento.setNome(request.nome());
         departamento.setDescricao(request.descricao());
-        departamento.setEmpresa(buscarEmpresa(request.codigo_empresa()));
-        departamento.setFuncionarioCoordenador(buscarFuncionario(request.codigo_funcionario_coordenador()));
-        repository.save(departamento);
+        Empresa empresa = empresaRepository.findByCodigoAndStatus(request.codigoEmpresa(),Status.ATIVO)
+                .orElseThrow(() -> new EntidadeNaoEncontradaException("Empresa não encotrada."));
+        departamento.setEmpresa(empresa);
+        Funcionario funcionario = funcionarioRepository.findByCodigoAndStatus(request.codigoFuncionarioCoordenador(),Status.ATIVO)
+                .orElseThrow(() -> new EntidadeNaoEncontradaException("Funcionário não encotrado."));
+        departamento.setFuncionarioCoordenador(funcionario);
+        departamentoRepository.save(departamento);
     }
 
     @Transactional
     public void remover(Long codigo) {
-        Departamento departamento = buscarAtivo(codigo);
+        Departamento departamento = departamentoRepository.findByCodigoAndStatus(codigo, Status.ATIVO)
+        .orElseThrow(() -> new EntidadeNaoEncontradaException("Departamento não encontrado."));
         departamento.setStatus(Status.INATIVO);
-        repository.save(departamento);
-    }
-
-    @Transactional(readOnly = true)
-    public List<EmpresaResponse> buscarOpcoesEmpresa(String termo) {
-        if (!termoValido(termo)) {
-            return List.of();
-        }
-        return empresaRepository
-                .findAll(DepartamentoSpecifications.empresasAtivasPorNome(termo),
-                        PageRequest.of(0, LIMITE_OPCOES, Sort.by("nomeFantasia")))
-                .map(empresa -> new EmpresaResponse(
-                        empresa.getCodigo(),
-                        empresa.getRazaoSocial(),
-                        empresa.getNomeFantasia(),
-                        empresa.getCnpj(),
-                        empresa.getEmail(),
-                        empresa.getTelefone(),
-                        empresa.getEndereco(),
-                        empresa.getDataCadastro()))
-                .getContent();
-    }
-
-    @Transactional(readOnly = true)
-    public List<FuncionarioResponse> buscarOpcoesFuncionario(String termo) {
-        if (!termoValido(termo)) {
-            return List.of();
-        }
-        return funcionarioRepository
-                .findAll(DepartamentoSpecifications.funcionariosAtivosPorNome(termo),
-                        PageRequest.of(0, LIMITE_OPCOES, Sort.by("nome")))
-                .map(funcionario -> new FuncionarioResponse(
-                        funcionario.getCodigo(),
-                        funcionario.getNome(),
-                        funcionario.getCpf(),
-                        funcionario.getEmail(),
-                        funcionario.getTelefone(),
-                        funcionario.getCargo(),
-                        funcionario.getDataAdmissao()))
-                .getContent();
-    }
-
-    private static boolean termoValido(String termo) {
-        return termo != null && termo.trim().length() >= 3;
-    }
-
-    private Departamento buscarAtivo(Long codigo) {
-        return repository.findByCodigoAndStatus(codigo, Status.ATIVO)
-                .orElseThrow(() -> new EntidadeNaoEncontradaException("Departamento não encontrado: " + codigo));
-    }
-
-    private Empresa buscarEmpresa(Long codigo) {
-        return empresaRepository.findByCodigoAndStatus(codigo, Status.ATIVO)
-                .orElseThrow(() -> new EntidadeNaoEncontradaException("Empresa não encontrada: " + codigo));
-    }
-
-    private Funcionario buscarFuncionario(Long codigo) {
-        return funcionarioRepository.findByCodigoAndStatus(codigo, Status.ATIVO)
-                .orElseThrow(() -> new EntidadeNaoEncontradaException("Funcionário não encontrado: " + codigo));
+        departamentoRepository.save(departamento);
     }
 
     private Departamento toEntity(DepartamentoCreateRequest request) {
@@ -130,42 +102,36 @@ public class DepartamentoService {
         departamento.setNome(request.nome());
         departamento.setDescricao(request.descricao());
         departamento.setDataCriacao(LocalDate.now());
-        departamento.setEmpresa(buscarEmpresa(request.codigo_empresa()));
-        departamento.setFuncionarioCoordenador(buscarFuncionario(request.codigo_funcionario_coordenador()));
+        Empresa empresa = empresaRepository.findByCodigoAndStatus(request.codigoEmpresa(),Status.ATIVO)
+                .orElseThrow(() -> new EntidadeNaoEncontradaException("Empresa não encotrada."));
+        departamento.setEmpresa(empresa);
+        Funcionario funcionario = funcionarioRepository.findByCodigoAndStatus(request.codigoFuncionarioCoordenador(),Status.ATIVO)
+                .orElseThrow(() -> new EntidadeNaoEncontradaException("Funcionário não encotrado."));
+        departamento.setFuncionarioCoordenador(funcionario);
         return departamento;
     }
 
-    static DepartamentoResponse toResponse(Departamento departamento) {
-        Empresa empresa = departamento.getEmpresa();
-        Funcionario coordenador = departamento.getFuncionarioCoordenador();
-
+    private DepartamentoResponse toResponse(Departamento departamento) {
         return new DepartamentoResponse(
                 departamento.getCodigo(),
                 departamento.getNome(),
                 departamento.getDescricao(),
-                coordenador != null ? coordenador.getNome() : null,
-                empresa != null ? nomeExibicao(empresa) : null,
-                departamento.getStatus(),
-                departamento.getDataCriacao()
+                departamento.getDataCriacao(),
+                departamento.getEmpresa() != null ? departamento.getEmpresa().getCodigo() : null,
+                departamento.getEmpresa() != null ? departamento.getEmpresa().getNomeFantasia() : null,
+                departamento.getFuncionarioCoordenador() != null ? departamento.getFuncionarioCoordenador().getCodigo() : null,
+                departamento.getFuncionarioCoordenador() != null ? departamento.getFuncionarioCoordenador().getNome() : null
         );
     }
 
-    private static DepartamentoUpdateRequest toUpdateRequest(Departamento departamento) {
-        Empresa empresa = departamento.getEmpresa();
-        Funcionario coordenador = departamento.getFuncionarioCoordenador();
-
+    private DepartamentoUpdateRequest toUpdateRequest(Departamento departamento) {
         return new DepartamentoUpdateRequest(
                 departamento.getNome(),
-                empresa != null ? empresa.getCodigo() : null,
-                empresa != null ? nomeExibicao(empresa) : null,
-                coordenador != null ? coordenador.getCodigo() : null,
-                coordenador != null ? coordenador.getNome() : null,
+                departamento.getEmpresa() != null ? departamento.getEmpresa().getCodigo() : null,
+                departamento.getEmpresa() != null ? departamento.getEmpresa().getNomeFantasia() : null,
+                departamento.getFuncionarioCoordenador() != null ? departamento.getFuncionarioCoordenador().getCodigo() : null,
+                departamento.getFuncionarioCoordenador() != null ? departamento.getFuncionarioCoordenador().getNome() : null,
                 departamento.getDescricao()
         );
-    }
-
-    private static String nomeExibicao(Empresa empresa) {
-        String fantasia = empresa.getNomeFantasia();
-        return (fantasia != null && !fantasia.isBlank()) ? fantasia : empresa.getRazaoSocial();
     }
 }
