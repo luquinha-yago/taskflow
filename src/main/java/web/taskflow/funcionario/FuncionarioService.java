@@ -5,19 +5,32 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import lombok.RequiredArgsConstructor;
 import web.taskflow.common.enums.Status;
 import web.taskflow.common.exception.EntidadeNaoEncontradaException;
+import web.taskflow.departamento.Departamento;
+import web.taskflow.departamento.DepartamentoRepository;
+import web.taskflow.empresa.Empresa;
+import web.taskflow.empresa.EmpresaRepository;
 import web.taskflow.funcionario.dto.FuncionarioCreateRequest;
 import web.taskflow.funcionario.dto.FuncionarioResponse;
 import web.taskflow.funcionario.dto.FuncionarioSearchRequest;
 import web.taskflow.funcionario.dto.FuncionarioUpdateRequest;
 
 @Service
-@RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class FuncionarioService {
 
     private final FuncionarioRepository funcionarioRepository;
+    private final EmpresaRepository empresaRepository;
+    private final DepartamentoRepository departamentoRepository;
+
+    public FuncionarioService(FuncionarioRepository funcionarioRepository,
+                              EmpresaRepository empresaRepository,
+                              DepartamentoRepository departamentoRepository) {
+        this.funcionarioRepository = funcionarioRepository;
+        this.empresaRepository = empresaRepository;
+        this.departamentoRepository = departamentoRepository;
+    }
 
     @Transactional
     public void salvar(FuncionarioCreateRequest form) {
@@ -77,6 +90,12 @@ public class FuncionarioService {
         funcionario.setTelefone(request.telefone());
         funcionario.setCargo(request.cargo());
         funcionario.setDataAdmissao(request.dataAdmissao());
+        Empresa empresa = empresaRepository.findByCodigoAndStatus(request.codigoEmpresa(),Status.ATIVO)
+                .orElseThrow(() -> new EntidadeNaoEncontradaException("Empresa não encotrada."));
+        funcionario.setEmpresa(empresa);
+        Departamento departamento = departamentoRepository.findByCodigoAndStatus(request.codigoDepartamento(),Status.ATIVO)
+                .orElseThrow(() -> new EntidadeNaoEncontradaException("Departamento não encotrado."));
+        funcionario.setDepartamento(departamento);
         funcionarioRepository.save(funcionario);
     }
 
@@ -88,19 +107,6 @@ public class FuncionarioService {
         funcionarioRepository.save(funcionario);
     }
 
-    private FuncionarioResponse toResponse(Funcionario funcionario) {
-
-        return new FuncionarioResponse(
-            funcionario.getCodigo(),
-            funcionario.getNome(),
-            funcionario.getCpf(),
-            funcionario.getEmail(),
-            funcionario.getTelefone(),
-            funcionario.getCargo(),
-            funcionario.getDataAdmissao()
-        );
-    }
-
     private Funcionario toEntity(FuncionarioCreateRequest request) {
         Funcionario funcionario = new Funcionario();
         funcionario.setNome(request.nome());
@@ -109,10 +115,43 @@ public class FuncionarioService {
         funcionario.setTelefone(request.telefone());
         funcionario.setCargo(request.cargo());
         funcionario.setDataAdmissao(request.dataAdmissao());
+        Empresa empresa = empresaRepository.findByCodigoAndStatus(request.codigoEmpresa(),Status.ATIVO)
+                .orElseThrow(() -> new EntidadeNaoEncontradaException("Empresa não encotrada."));
+        funcionario.setEmpresa(empresa);
+        Departamento departamento = departamentoRepository.findByCodigoAndStatus(request.codigoDepartamento(),Status.ATIVO)
+                .orElseThrow(() -> new EntidadeNaoEncontradaException("Departamento não encotrado."));
+        funcionario.setDepartamento(departamento);
         return funcionario;
     }
 
+    private FuncionarioResponse toResponse(Funcionario funcionario) {
+        return new FuncionarioResponse(
+            funcionario.getCodigo(),
+            funcionario.getNome(),
+            funcionario.getCpf(),
+            funcionario.getEmail(),
+            funcionario.getTelefone(),
+            funcionario.getCargo(),
+            funcionario.getDataAdmissao(),
+            funcionario.getEmpresa() != null ? funcionario.getEmpresa().getCodigo() : null,
+            funcionario.getEmpresa() != null ? funcionario.getEmpresa().getNomeFantasia() : null,
+            funcionario.getDepartamento() != null ? funcionario.getDepartamento().getCodigo() : null,
+            funcionario.getDepartamento() != null ? funcionario.getDepartamento().getNome() : null
+        );
+    }
+
     private FuncionarioUpdateRequest toUpdateRequest(Funcionario funcionario) {
-        return new FuncionarioUpdateRequest(funcionario.getNome(), funcionario.getCpf(), funcionario.getEmail(), funcionario.getTelefone(), funcionario.getCargo(), funcionario.getDataAdmissao());
+        return new FuncionarioUpdateRequest(
+            funcionario.getNome(),
+            funcionario.getCpf(),
+            funcionario.getEmail(),
+            funcionario.getTelefone(),
+            funcionario.getCargo(),
+            funcionario.getDataAdmissao(),
+            funcionario.getEmpresa() != null ? funcionario.getEmpresa().getCodigo() : null,
+            funcionario.getEmpresa() != null ? funcionario.getEmpresa().getNomeFantasia() : null,
+            funcionario.getDepartamento() != null ? funcionario.getDepartamento().getCodigo() : null,
+            funcionario.getDepartamento() != null ? funcionario.getDepartamento().getNome() : null
+        );
     }
 }
