@@ -8,22 +8,22 @@
 
     <div th:replace="~{components/forms :: inputBuscavel(
         textoLabel='Empresa',
-        nomeAtributo='codigo_empresa',
-        valorAtributo=*{codigo_empresa},
-        nomeAtributoTexto='nome_empresa',
-        valorAtributoTexto=*{nome_empresa},
-        urlBusca='/departamentos/opcoes/empresas',
+        nomeAtributo='codigoEmpresa',
+        valorAtributo=*{codigoEmpresa},
+        nomeAtributoTexto='nomeEmpresa',
+        valorAtributoTexto=*{nomeEmpresa},
+        urlBusca='/departamentos/pesquisarempresa',
         placeholderBusca='Digite ao menos 3 letras...',
         isValidado=true)}">
     </div>
 
     <div th:replace="~{components/forms :: inputBuscavel(
-        textoLabel='Funcionário coordenador',
-        nomeAtributo='codigo_funcionario_coordenador',
-        valorAtributo=*{codigo_funcionario_coordenador},
-        nomeAtributoTexto='nome_funcionario_coordenador',
-        valorAtributoTexto=*{nome_funcionario_coordenador},
-        urlBusca='/departamentos/opcoes/funcionarios',
+        textoLabel='Funcionário Coordenador',
+        nomeAtributo='codigoFuncionarioCoordenador',
+        valorAtributo=*{codigoFuncionarioCoordenador},
+        nomeAtributoTexto='nomeFuncionarioCoordenador',
+        valorAtributoTexto=*{nomeFuncionarioCoordenador},
+        urlBusca='/departamentos/pesquisarfuncionario',
         placeholderBusca='Digite ao menos 3 letras...',
         isValidado=true)}">
     </div>
