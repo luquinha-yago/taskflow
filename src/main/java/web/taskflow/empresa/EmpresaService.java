@@ -6,7 +6,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import lombok.RequiredArgsConstructor;
 import web.taskflow.common.enums.Status;
 import web.taskflow.common.exception.EntidadeNaoEncontradaException;
 import web.taskflow.empresa.dto.EmpresaCreateRequest;
@@ -15,10 +14,14 @@ import web.taskflow.empresa.dto.EmpresaSearchRequest;
 import web.taskflow.empresa.dto.EmpresaUpdateRequest;
 
 @Service
-@RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class EmpresaService {
 
     private final EmpresaRepository empresaRepository;
+
+    public EmpresaService(EmpresaRepository empresaRepository){
+        this.empresaRepository = empresaRepository;
+    }
 
     @Transactional
     public void salvar(EmpresaCreateRequest form) {
