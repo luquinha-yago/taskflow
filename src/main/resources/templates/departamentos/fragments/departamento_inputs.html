@@ -1,0 +1,38 @@
+<th:block th:fragment="campos">
+
+    <div th:replace="~{components/forms :: inputTexto(
+        textoLabel='Nome',
+        nomeAtributo='nome',
+        isValidado=true)}">
+    </div>
+
+    <div th:replace="~{components/forms :: inputBuscavel(
+        textoLabel='Empresa',
+        nomeAtributo='codigoEmpresa',
+        valorAtributo=*{codigoEmpresa},
+        nomeAtributoTexto='nomeEmpresa',
+        valorAtributoTexto=*{nomeEmpresa},
+        urlBusca='/departamentos/pesquisarempresa',
+        placeholderBusca='Digite ao menos 3 letras...',
+        isValidado=true)}">
+    </div>
+
+    <div th:replace="~{components/forms :: inputBuscavel(
+        textoLabel='Funcionário Coordenador',
+        nomeAtributo='codigoFuncionarioCoordenador',
+        valorAtributo=*{codigoFuncionarioCoordenador},
+        nomeAtributoTexto='nomeFuncionarioCoordenador',
+        valorAtributoTexto=*{nomeFuncionarioCoordenador},
+        urlBusca='/departamentos/pesquisarfuncionario',
+        placeholderBusca='Digite ao menos 3 letras...',
+        isValidado=true)}">
+    </div>
+
+    <div th:replace="~{components/forms :: inputTextArea(
+        textoLabel='Descrição',
+        nomeAtributo='descricao',
+        nroLinhas=4,
+        isValidado=true)}">
+    </div>
+
+</th:block>

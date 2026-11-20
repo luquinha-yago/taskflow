@@ -40,7 +40,17 @@
 
     <div x-show="open" x-cloak x-transition class="ml-5 mt-1 space-y-1 border-l border-slate-700 pl-4">
 
-      <!-- Futuramente: cadastrar e pesquisar departamentos -->
+      <th:block th:replace="~{components/menu-item-option :: menu-item-option(
+        'Cadastrar',
+        @{/departamentos/cadastrar},
+        ~{::#cadastrar-departamento-icon}
+    )}"></th:block>
+
+      <th:block th:replace="~{components/menu-item-option :: menu-item-option(
+        'Ver departamentos',
+        @{/departamentos},
+        ~{::#visualizar-departamentos-icon}
+    )}"></th:block>
 
     </div>
   </div>
@@ -223,6 +233,35 @@
   <rect x="2" y="16" width="8" height="5" rx="1" />
   <rect x="14" y="16" width="8" height="5" rx="1" />
   <path d="M12 8v4M6 16v-4h12v4" />
+</svg>
+
+<svg id="cadastrar-departamento-icon"
+     th:fragment="cadastrar-departamento-icon"
+     xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 24 24"
+     fill="none"
+     stroke="currentColor"
+     stroke-width="1.8"
+     stroke-linecap="round"
+     stroke-linejoin="round">
+    <rect x="8" y="3" width="8" height="5" rx="1"/>
+    <rect x="2" y="16" width="8" height="5" rx="1"/>
+    <path d="M12 8v4M6 16v-4h6"/>
+    <path d="M18 13v6"/>
+    <path d="M15 16h6"/>
+</svg>
+
+<svg id="visualizar-departamentos-icon"
+     th:fragment="visualizar-departamentos-icon"
+     xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 24 24"
+     fill="none"
+     stroke="currentColor"
+     stroke-width="1.8"
+     stroke-linecap="round"
+     stroke-linejoin="round">
+    <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/>
+    <circle cx="12" cy="12" r="3"/>
 </svg>
 
 <!-- Projetos -->

@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="pt-BR"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.thymeleaf.org"
+      layout:decorate="~{layout/layoutpadrao}">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Departamentos</title>
+</head>
+
+<body>
+
+    <main layout:fragment="conteudo"
+          th:fragment="conteudo"
+          id="main"
+          class="flex flex-col w-full p-6 md:p-10">
+
+        <div th:replace="~{components/cabecalho-pagina :: cabecalho(
+            'Departamentos',
+            'Consulte, pesquise e gerencie os departamentos cadastrados na plataforma.',
+            null
+        )}"></div>
+
+        <!-- Pesquisa -->
+        <form th:hx-get="@{/departamentos}"
+              th:object="${departamentoSearchRequest}"
+              class="w-full mb-8">
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+
+                <div>
+                    <div th:replace="~{components/forms :: inputNumero(
+                        textoLabel='Código',
+                        nomeAtributo='codigo',
+                        valorAtributo=*{codigo})}">
+                    </div>
+                </div>
+
+                <div>
+                    <div th:replace="~{components/forms :: inputTexto(
+                        textoLabel='Nome',
+                        nomeAtributo='nome',
+                        valorAtributo=*{nome})}">
+                    </div>
+                </div>
+
+                <div>
+                    <div th:replace="~{components/forms :: inputBuscavel(
+                        textoLabel='Empresa',
+                        nomeAtributo='codigoEmpresa',
+                        valorAtributo=*{codigoEmpresa},
+                        nomeAtributoTexto='nomeEmpresa',
+                        valorAtributoTexto=*{nomeEmpresa},
+                        urlBusca='/departamentos/pesquisarempresa',
+                        placeholderBusca='Digite ao menos 3 letras...',
+                        isValidado=true)}">
+                    </div>
+                </div>
+
+                <div>
+                    <div th:replace="~{components/forms :: inputBuscavel(
+                        textoLabel='Funcionário coordenador',
+                        nomeAtributo='codigoFuncionarioCoordenador',
+                        valorAtributo=*{codigoFuncionarioCoordenador},
+                        nomeAtributoTexto='nomeFuncionarioCoordenador',
+                        valorAtributoTexto=*{nomeFuncionarioCoordenador},
+                        urlBusca='/departamentos/pesquisarfuncionario',
+                        placeholderBusca='Digite ao menos 3 letras...',
+                        isValidado=true)}">
+                    </div>
+                </div>
+
+                <div>
+                    <div th:replace="~{components/forms :: inputData(
+                        textoLabel='Data de Criação Inicial',
+                        nomeAtributo='dataCriacaoInicial',
+                        valorAtributo=*{dataCriacaoInicial})}">
+                    </div>
+                </div>
+
+                <div>
+                    <div th:replace="~{components/forms :: inputData(
+                        textoLabel='Data de Criação Final',
+                        nomeAtributo='dataCriacaoFinal',
+                        valorAtributo=*{dataCriacaoFinal})}">
+                    </div>
+                </div>
+
+            </div>
+
+            <button type="submit"
+                    class="mt-5 px-5 py-3 rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-500 transition">
+                Pesquisar
+            </button>
+
+        </form>
+
+        <!-- Listagem -->
+        <div th:if="${not pagina.vazia}"
+             class="w-full overflow-x-auto">
+
+            <div class="min-w-full inline-block align-middle">
+
+                <div class="border border-slate-700 rounded-xl overflow-hidden">
+
+                    <table class="min-w-full divide-y divide-slate-700">
+
+                        <thead class="bg-slate-800">
+                            <tr>
+
+                                <th:block th:replace="~{components/paginacao :: coluna(
+                                    ${pagina}, 'codigo', 'Código', ''
+                                )}">
+                                </th:block>
+
+                                <th:block th:replace="~{components/paginacao :: coluna(
+                                    ${pagina}, 'nome', 'Nome', ''
+                                )}">
+                                </th:block>
+
+                                <th scope="col"
+                                    class="px-6 py-4 text-left text-xs font-semibold text-slate-400 uppercase">
+                                    Descrição
+                                </th>
+
+                                <th scope="col"
+                                    class="px-6 py-4 text-left text-xs font-semibold text-slate-400 uppercase">
+                                    Empresa
+                                </th>
+
+                                <th scope="col"
+                                    class="px-6 py-4 text-left text-xs font-semibold text-slate-400 uppercase">
+                                    Coordenador
+                                </th>
+
+                                <th:block th:replace="~{components/paginacao :: coluna(
+                                    ${pagina}, 'dataCriacao', 'Data Criação', ''
+                                )}">
+                                </th:block>
+
+                                <th scope="col"
+                                    colspan="2"
+                                    class="px-6 py-4 text-center text-xs font-semibold text-slate-400 uppercase">
+                                    Ações
+                                </th>
+
+                            </tr>
+                        </thead>
+
+                        <tbody class="divide-y divide-slate-700">
+
+                            <tr th:each="departamento : ${pagina.conteudo}"
+                                class="bg-slate-900 hover:bg-slate-800 transition">
+
+                                <td th:text="${departamento.codigo}"
+                                    class="px-6 py-4 whitespace-nowrap text-sm text-slate-300">
+                                </td>
+
+                                <td th:text="${departamento.nome}"
+                                    class="px-6 py-4 whitespace-nowrap text-sm font-medium text-white">
+                                </td>
+
+                                <td th:text="${departamento.descricao}"
+                                    class="px-6 py-4 text-sm text-slate-300 max-w-xs truncate">
+                                </td>
+
+                                <td th:text="${departamento.nomeEmpresa}"
+                                    class="px-6 py-4 whitespace-nowrap text-sm text-slate-300">
+                                </td>
+
+                                <td th:text="${departamento.nomeFuncionarioCoordenador}"
+                                    class="px-6 py-4 whitespace-nowrap text-sm text-slate-300">
+                                </td>
+
+                                <td th:text="${#temporals.format(departamento.dataCriacao, 'dd/MM/yyyy')}"
+                                    class="px-6 py-4 whitespace-nowrap text-sm text-slate-300">
+                                </td>
+
+                                <!-- Alterar -->
+                                <td class="px-6 py-4 whitespace-nowrap text-center text-sm">
+
+                                    <a th:hx-get="@{/departamentos/{codigo}/editar(codigo=${departamento.codigo})}"
+                                    hx-push-url="true"
+                                    class="inline-flex items-center justify-center gap-2
+                                            font-medium text-blue-400 transition-colors
+                                            hover:text-blue-300 cursor-pointer">
+
+                                        <svg xmlns="http://www.w3.org/2000/svg"
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            stroke-width="1.8"
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            class="h-4 w-4 shrink-0">
+                                            <path d="M12 20h9"/>
+                                            <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L8 18l-4 1 1-4Z"/>
+                                        </svg>
+
+                                        Alterar
+                                    </a>
+
+                                </td>
+
+                                <!-- Remover -->
+                                <td class="px-6 py-4 whitespace-nowrap text-center text-sm">
+
+                                    <button type="button"
+                                            th:hx-delete="@{/departamentos/{codigo}(codigo=${departamento.codigo})}"
+                                            th:hx-confirm="${'Você deseja remover o departamento ' + departamento.nome + '?'}"
+                                            class="inline-flex items-center justify-center gap-2
+                                                font-medium text-red-400 transition-colors
+                                                hover:text-red-300 cursor-pointer">
+
+                                        <svg xmlns="http://www.w3.org/2000/svg"
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            stroke-width="1.8"
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            class="h-4 w-4 shrink-0">
+                                            <path d="M3 6h18"/>
+                                            <path d="M8 6V4h8v2"/>
+                                            <path d="m19 6-1 14H6L5 6"/>
+                                            <path d="M10 11v5"/>
+                                            <path d="M14 11v5"/>
+                                        </svg>
+
+                                        Remover
+                                    </button>
+
+                                </td>
+
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+                <div th:replace="~{components/paginacao :: paginacao(${pagina})}">
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Estado vazio -->
+        <div th:if="${pagina.vazia}"
+             class="flex flex-col items-center justify-center py-16 border border-dashed border-slate-700 rounded-xl">
+
+            <p class="text-lg font-medium text-white">
+                Nenhum departamento encontrado
+            </p>
+
+            <p class="mt-2 text-sm text-slate-400">
+                Não existem departamentos cadastrados ou correspondentes à pesquisa.
+            </p>
+
+        </div>
+
+    </main>
+
+</body>
+</html>
