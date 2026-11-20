@@ -1,6 +1,7 @@
 package web.taskflow.departamento;
 
 import java.time.LocalDate;
+import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -68,6 +69,12 @@ public class DepartamentoService {
         }
     }
 
+    public List<DepartamentoResponse> buscarPeloNome(String nome) {
+        return departamentoRepository.findTop10ByNomeContainingIgnoreCaseAndStatusOrderByNomeAsc(nome, Status.ATIVO).stream()
+            .map(this::toResponse)
+            .toList();
+    }
+
     public DepartamentoUpdateRequest buscarParaEdicao(Long codigo) {
         Departamento departamento = departamentoRepository.findByCodigoAndStatus(codigo, Status.ATIVO)
         .orElseThrow(() -> new EntidadeNaoEncontradaException("Departamento não encontrado."));
@@ -83,9 +90,19 @@ public class DepartamentoService {
         Empresa empresa = empresaRepository.findByCodigoAndStatus(request.codigoEmpresa(),Status.ATIVO)
                 .orElseThrow(() -> new EntidadeNaoEncontradaException("Empresa não encotrada."));
         departamento.setEmpresa(empresa);
-        Funcionario funcionario = funcionarioRepository.findByCodigoAndStatus(request.codigoFuncionarioCoordenador(),Status.ATIVO)
-                .orElseThrow(() -> new EntidadeNaoEncontradaException("Funcionário não encotrado."));
-        departamento.setFuncionarioCoordenador(funcionario);
+        if (request.codigoFuncionarioCoordenador() != null) {
+            Funcionario funcionario = funcionarioRepository
+                    .findByCodigoAndStatus(
+                        request.codigoFuncionarioCoordenador(),
+                        Status.ATIVO
+                    )
+                    .orElseThrow(() ->
+                        new EntidadeNaoEncontradaException(
+                            "Funcionário não encontrado."
+                        )
+                    );
+            departamento.setFuncionarioCoordenador(funcionario);
+        }
         departamentoRepository.save(departamento);
     }
 
@@ -105,9 +122,19 @@ public class DepartamentoService {
         Empresa empresa = empresaRepository.findByCodigoAndStatus(request.codigoEmpresa(),Status.ATIVO)
                 .orElseThrow(() -> new EntidadeNaoEncontradaException("Empresa não encotrada."));
         departamento.setEmpresa(empresa);
-        Funcionario funcionario = funcionarioRepository.findByCodigoAndStatus(request.codigoFuncionarioCoordenador(),Status.ATIVO)
-                .orElseThrow(() -> new EntidadeNaoEncontradaException("Funcionário não encotrado."));
-        departamento.setFuncionarioCoordenador(funcionario);
+        if (request.codigoFuncionarioCoordenador() != null) {
+            Funcionario funcionario = funcionarioRepository
+                    .findByCodigoAndStatus(
+                        request.codigoFuncionarioCoordenador(),
+                        Status.ATIVO
+                    )
+                    .orElseThrow(() ->
+                        new EntidadeNaoEncontradaException(
+                            "Funcionário não encontrado."
+                        )
+                    );
+            departamento.setFuncionarioCoordenador(funcionario);
+        }
         return departamento;
     }
 

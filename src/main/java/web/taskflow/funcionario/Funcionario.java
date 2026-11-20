@@ -1,15 +1,16 @@
 package web.taskflow.funcionario;
 
+import java.io.Serializable;
+import java.time.LocalDate;
+import org.hibernate.annotations.DynamicUpdate;
 import jakarta.persistence.*;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.hibernate.annotations.DynamicUpdate;
 import web.taskflow.common.enums.Status;
-
-import java.io.Serializable;
-import java.time.LocalDate;
+import web.taskflow.departamento.Departamento;
+import web.taskflow.empresa.Empresa;
 
 @Entity
 @Table(name = "funcionario")
@@ -49,7 +50,7 @@ public class Funcionario implements Serializable {
     @Column(name = "data_admissao")
     @ToString.Include
     private LocalDate dataAdmissao;
-    /*
+    
     @ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "codigo_empresa")
     private Empresa empresa;
@@ -57,7 +58,7 @@ public class Funcionario implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "codigo_departamento")
     private Departamento departamento;
-    */
+    
     @Enumerated(EnumType.STRING)
     @ToString.Include
     private Status status = Status.ATIVO;

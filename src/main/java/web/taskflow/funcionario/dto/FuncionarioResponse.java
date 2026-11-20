@@ -9,9 +9,10 @@ public record FuncionarioResponse(
     String email,
     String telefone, 
     String cargo, 
-    LocalDate dataAdmissao
-    /* 
+    LocalDate dataAdmissao,
     Long codigoEmpresa,
-    Long codigoDepartamento
-    */) {
+    String nomeEmpresa,
+    Long codigoDepartamento,
+    String nomeDepartamento
+    ) {
 }

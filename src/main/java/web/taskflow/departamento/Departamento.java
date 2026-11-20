@@ -49,7 +49,7 @@ public class Departamento implements Serializable {
     private Empresa empresa;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "funcionario_coordenador_id")
+    @JoinColumn(name = "funcionario_coordenador_id", nullable = true)
     private Funcionario funcionarioCoordenador;
 
     @Enumerated(EnumType.STRING)
