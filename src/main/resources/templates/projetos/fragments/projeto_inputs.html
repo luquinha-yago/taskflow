@@ -1,0 +1,57 @@
+<th:block th:fragment="campos">
+
+    <div th:replace="~{components/forms :: inputTexto(
+        textoLabel='Nome do Projeto',
+        nomeAtributo='nome',
+        isValidado=true)}">
+    </div>
+
+    <div th:replace="~{components/forms :: inputTextArea(
+        textoLabel='Descrição',
+        nomeAtributo='descricao',
+        nroLinhas=4,
+        isValidado=true)}">
+    </div>
+
+    <div th:replace="~{components/forms :: inputData(
+        textoLabel='Data de Início',
+        nomeAtributo='dataInicio',
+        isValidado=true)}">
+    </div>
+
+    <div th:replace="~{components/forms :: inputData(
+        textoLabel='Data de Fim',
+        nomeAtributo='dataFim',
+        isValidado=true)}">
+    </div>
+
+    <div th:replace="~{components/forms :: inputRadio(
+        textoLabelGroup='Situação do projeto',
+        nomeAtributo='statusProjeto',
+        listaOpcoes=${statusProjetos},
+        propValue='valor',
+        propLabel='descricao',
+        isValidado=true
+    )}"></div>
+
+    <div th:replace="~{components/forms :: inputRadio(
+        textoLabelGroup='Prioridade',
+        nomeAtributo='prioridade',
+        listaOpcoes=${prioridades},
+        propValue='valor',
+        propLabel='descricao',
+        isValidado=true
+    )}"></div>
+
+    <div th:replace="~{components/forms :: inputBuscavel(
+        textoLabel='Departamento',
+        nomeAtributo='codigoDepartamento',
+        valorAtributo=*{codigoDepartamento},
+        nomeAtributoTexto='nomeDepartamento',
+        valorAtributoTexto=*{nomeDepartamento},
+        urlBusca='/projetos/pesquisardepartamento',
+        placeholderBusca='Digite ao menos 3 letras...',
+        isValidado=true)}">
+    </div>
+
+</th:block>
