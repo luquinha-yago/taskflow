@@ -56,21 +56,21 @@ public class TarefaService {
                 .map(this::toResponse);
     }
 
-    public TarefaResponse buscarParaVisualizar(Long id) {
-        Tarefa tarefa = tarefaRepository.findByIdAndStatus(id, Status.ATIVO)
+    public TarefaResponse buscarParaVisualizar(Long codigo) {
+        Tarefa tarefa = tarefaRepository.findByCodigoAndStatus(codigo, Status.ATIVO)
         .orElseThrow(() -> new EntidadeNaoEncontradaException("Tarefa não encontrada."));
         return toResponse(tarefa);
     }
 
-    public TarefaUpdateRequest buscarParaEdicao(Long id) {
-        Tarefa tarefa = tarefaRepository.findByIdAndStatus(id, Status.ATIVO)
+    public TarefaUpdateRequest buscarParaEdicao(Long codigo) {
+        Tarefa tarefa = tarefaRepository.findByCodigoAndStatus(codigo, Status.ATIVO)
         .orElseThrow(() -> new EntidadeNaoEncontradaException("Tarefa não encontrada."));
         return toUpdateRequest(tarefa);
     }
 
     @Transactional
-    public void atualizar(Long id, TarefaUpdateRequest request) {
-        Tarefa tarefa = tarefaRepository.findByIdAndStatus(id, Status.ATIVO)
+    public void atualizar(Long codigo, TarefaUpdateRequest request) {
+        Tarefa tarefa = tarefaRepository.findByCodigoAndStatus(codigo, Status.ATIVO)
         .orElseThrow(() -> new EntidadeNaoEncontradaException("Tarefa não encontrada."));
         tarefa.setTitulo(request.titulo());
         tarefa.setDescricao(request.descricao());
@@ -91,8 +91,8 @@ public class TarefaService {
      * dela, para que o controller possa voltar ao quadro do projeto.
      */
     @Transactional
-    public Long remover(Long id) {
-        Tarefa tarefa = tarefaRepository.findByIdAndStatus(id, Status.ATIVO)
+    public Long remover(Long codigo) {
+        Tarefa tarefa = tarefaRepository.findByCodigoAndStatus(codigo, Status.ATIVO)
         .orElseThrow(() -> new EntidadeNaoEncontradaException("Tarefa não encontrada."));
         tarefa.setStatus(Status.INATIVO);
         tarefaRepository.save(tarefa);
@@ -154,7 +154,7 @@ public class TarefaService {
         Funcionario funcionario = tarefa.getFuncionarioResponsavel();
 
         return new TarefaResponse(
-            tarefa.getId(),
+            tarefa.getCodigo(),
             tarefa.getTitulo(),
             tarefa.getDescricao(),
             tarefa.getDataCriacao(),

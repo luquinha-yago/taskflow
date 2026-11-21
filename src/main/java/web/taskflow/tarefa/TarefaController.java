@@ -95,26 +95,26 @@ public class TarefaController {
         }
     }
 
-    @GetMapping("/{id}")
-    public String abrirTarefa(@PathVariable("id") Long id, Model model,
+    @GetMapping("/{codigo}")
+    public String abrirTarefa(@PathVariable("codigo") Long codigo, Model model,
                               HtmxRequest htmxRequest) {
-        TarefaResponse tarefa = tarefaService.buscarParaVisualizar(id);
+        TarefaResponse tarefa = tarefaService.buscarParaVisualizar(codigo);
         model.addAttribute("tarefa", tarefa);
         return htmxRequest.isHtmxRequest() ? "tarefas/visualizar :: conteudo" : "tarefas/visualizar";
     }
 
-    @GetMapping("/{id}/editar")
-    public String abrirEditar(@PathVariable("id") Long id, Model model,
+    @GetMapping("/{codigo}/editar")
+    public String abrirEditar(@PathVariable("codigo") Long codigo, Model model,
                               HtmxRequest htmxRequest) {
-        TarefaUpdateRequest request = tarefaService.buscarParaEdicao(id);
+        TarefaUpdateRequest request = tarefaService.buscarParaEdicao(codigo);
         model.addAttribute("tarefaUpdateRequest", request);
-        model.addAttribute("id", id);
+        model.addAttribute("codigo", codigo);
         adicionarOpcoes(model);
         return htmxRequest.isHtmxRequest() ? "tarefas/edit :: formulario" : "tarefas/edit";
     }
 
-    @PutMapping("/{id}")
-    public String editar(@PathVariable("id") Long id,
+    @PutMapping("/{codigo}")
+    public String editar(@PathVariable("codigo") Long codigo,
                          @Valid TarefaUpdateRequest request,
                          BindingResult resultado,
                          Model model,
@@ -129,24 +129,24 @@ public class TarefaController {
             for (ObjectError erro : resultado.getGlobalErrors()) {
                 log.info("{}", erro);
             }
-            model.addAttribute("id", id);
+            model.addAttribute("codigo", codigo);
             adicionarOpcoes(model);
             return htmxRequest.isHtmxRequest() ? "tarefas/edit :: formulario" : "tarefas/edit";
         } else {
-            tarefaService.atualizar(id, request);
+            tarefaService.atualizar(codigo, request);
             redirect.addFlashAttribute("notificacaoSA2",
                     new NotificacaoSweetAlert2("Tarefa alterada com sucesso!",
                             TipoNotificacaoSweetAlert2.SUCCESS, 4000));
-            String urlTarefa = "/tarefas/" + id;
+            String urlTarefa = "/tarefas/" + codigo;
             return htmxRequest.isHtmxRequest() ? "redirect:htmx:location:" + urlTarefa : "redirect:" + urlTarefa;
         }
     }
 
-    @DeleteMapping("/{id}")
-    public String remover(@PathVariable("id") Long id,
+    @DeleteMapping("/{codigo}")
+    public String remover(@PathVariable("codigo") Long codigo,
                           RedirectAttributes redirect,
                           HtmxRequest htmxRequest) {
-        Long codigoProjeto = tarefaService.remover(id);
+        Long codigoProjeto = tarefaService.remover(codigo);
         redirect.addFlashAttribute("notificacaoSA2",
                 new NotificacaoSweetAlert2("Tarefa removida com sucesso!",
                         TipoNotificacaoSweetAlert2.SUCCESS, 4000));

@@ -34,7 +34,7 @@ public class Tarefa implements Serializable {
     @GeneratedValue(generator = "gerador_tarefa", strategy = GenerationType.SEQUENCE)
     @EqualsAndHashCode.Include
     @ToString.Include
-    private Long id;
+    private Long codigo;
 
     @ToString.Include
     private String titulo;

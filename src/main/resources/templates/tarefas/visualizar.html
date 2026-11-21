@@ -48,7 +48,7 @@
 
                 <p class="text-xs font-semibold uppercase
                           tracking-wider text-blue-400">
-                    <span th:text="${'TAREFA #' + tarefa.id}"></span>
+                    <span th:text="${'TAREFA #' + tarefa.codigo}"></span>
                     <span class="text-slate-500"> · </span>
                     <span class="text-slate-400 normal-case tracking-normal"
                           th:text="${tarefa.nomeProjeto}"></span>
@@ -84,7 +84,7 @@
         <!-- Ações -->
         <div class="flex items-center gap-2 shrink-0">
 
-            <a th:href="@{/tarefas/{id}/editar(id=${tarefa.id})}"
+            <a th:href="@{/tarefas/{codigo}/editar(codigo=${tarefa.codigo})}"
                class="inline-flex items-center gap-2 rounded-lg
                       border border-slate-700 bg-slate-800
                       px-4 py-2.5 text-sm font-medium
@@ -107,7 +107,7 @@
             </a>
 
             <button type="button"
-                    th:attr="hx-delete=@{/tarefas/{id}(id=${tarefa.id})}"
+                    th:attr="hx-delete=@{/tarefas/{codigo}(codigo=${tarefa.codigo})}"
                     hx-confirm="Tem certeza que deseja excluir esta tarefa?"
                     hx-target="#main"
                     hx-swap="outerHTML"

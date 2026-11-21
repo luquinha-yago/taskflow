@@ -1,6 +1,6 @@
 <th:block th:fragment="card(tarefa)" xmlns:th="http://www.thymeleaf.org">
 
-    <a th:href="@{/tarefas/{id}(id=${tarefa.id})}"
+    <a th:href="@{/tarefas/{codigo}(codigo=${tarefa.codigo})}"
        th:with="atrasada=${tarefa.dataPrazo != null
                     and tarefa.statusTarefa.name() != 'FEITO'
                     and tarefa.dataPrazo.isBefore(#temporals.createToday())}"
@@ -14,7 +14,7 @@
         <div class="flex items-center justify-between gap-2">
 
             <p class="text-xs font-medium text-slate-500"
-               th:text="${'TAREFA #' + tarefa.id}">
+               th:text="${'TAREFA #' + tarefa.codigo}">
             </p>
 
             <span class="taskflow-prioridade taskflow-prioridade-card"

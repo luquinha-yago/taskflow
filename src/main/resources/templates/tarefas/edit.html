@@ -23,13 +23,13 @@
             null
         )}"></div>
 
-        <form th:hx-put="@{/tarefas/{id}(id=${id})}"
+        <form th:hx-put="@{/tarefas/{codigo}(codigo=${codigo})}"
               th:object="${tarefaUpdateRequest}"
               class="w-full max-w-2xl">
 
             <div th:replace="~{components/forms :: campoEstatico(
                 textoLabel='Código',
-                textoExibicao=${id})}">
+                textoExibicao=${codigo})}">
             </div>
 
             <div th:replace="~{tarefas/fragments/tarefa_inputs :: campos}">
@@ -42,7 +42,7 @@
                     Salvar alterações
                 </button>
 
-                <a th:hx-get="@{/tarefas/{id}(id=${id})}"
+                <a th:hx-get="@{/tarefas/{codigo}(codigo=${codigo})}"
                    hx-target="#main"
                    hx-push-url="true"
                    class="px-5 py-3 rounded-lg border border-slate-600 text-slate-300 hover:bg-slate-700 transition cursor-pointer">

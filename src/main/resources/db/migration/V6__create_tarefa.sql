@@ -1,7 +1,5 @@
-CREATE SEQUENCE public.tarefa_codigo_seq;
-
 CREATE TABLE public.tarefa (
-    id bigint NOT NULL DEFAULT nextval('public.tarefa_codigo_seq'),
+    codigo bigserial NOT NULL,
     titulo text,
     descricao text,
     data_criacao date,
@@ -14,10 +12,10 @@ CREATE TABLE public.tarefa (
     codigo_projeto bigint,
     funcionario_responsavel_id bigint,
     status text DEFAULT 'ATIVO',
-    PRIMARY KEY (id)
+    PRIMARY KEY (codigo)
 );
 
-ALTER SEQUENCE public.tarefa_codigo_seq OWNED BY public.tarefa.id;
+ALTER SEQUENCE public.tarefa_codigo_seq OWNED BY public.tarefa.codigo;
 
 ALTER TABLE public.tarefa
     ADD CONSTRAINT fk_tarefa_empresa

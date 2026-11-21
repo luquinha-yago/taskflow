@@ -5,7 +5,7 @@ import web.taskflow.common.enums.Prioridade;
 import web.taskflow.common.enums.StatusTarefa;
 
 public record TarefaResponse(
-    Long id,
+    Long codigo,
     String titulo,
     String descricao,
     LocalDate dataCriacao,

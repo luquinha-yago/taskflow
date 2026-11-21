@@ -10,5 +10,5 @@ public interface TarefaRepository extends JpaRepository<Tarefa, Long>,
         JpaSpecificationExecutor<Tarefa> {
 
     @EntityGraph(attributePaths = {"projeto", "funcionarioResponsavel", "empresa"})
-    public Optional<Tarefa> findByIdAndStatus(Long id, Status status);
+    public Optional<Tarefa> findByCodigoAndStatus(Long codigo, Status status);
 }
