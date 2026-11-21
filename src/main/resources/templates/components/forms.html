@@ -693,7 +693,9 @@
       <div th:each="item, stat : ${listaOpcoes}" class="flex items-center">
         <input type="radio" th:name="${nomeAtributo}" th:id="${nomeAtributo + stat.index}"
           th:value="${propValue != null ? item[propValue] : item}" th:disabled="${disabledFlag}"
-          th:checked="${valorDoObjeto != null and valorDoObjeto == item}"
+          th:checked="${valorDoObjeto != null and
+          #strings.toString(valorDoObjeto) ==
+          (propValue != null ? item[propValue] : item)}"
           th:class="|shrink-0 mt-0.5 rounded-full disabled:opacity-50 cursor-pointer text-gray-600 ${temErro ? 'border-red-300 focus:ring-red-500 focus:border-red-500' : 'border-slate-600 focus:ring-blue-500 focus:border-blue-500'}|" />
         <label th:for="${nomeAtributo + stat.index}" th:text="${propLabel != null ? item[propLabel] : item}"
           class="text-sm ms-3 cursor-pointer text-slate-200"></label>
@@ -711,7 +713,10 @@
       <div th:each="item, stat : ${listaOpcoes}" class="flex items-center">
         <input type="radio" th:name="${nomeAtributo}" th:id="${nomeAtributo + stat.index}"
           th:value="${propValue != null ? item[propValue] : item}" th:disabled="${disabledFlag}"
-          th:checked="${valorSelecionado != null ? valorSelecionado == item : stat.first}"
+          th:checked="${valorSelecionado != null ?
+          #strings.toString(valorSelecionado) ==
+          (propValue != null ? item[propValue] : item) :
+          stat.first}"
           class="bg-[#172235] shrink-0 mt-0.5 rounded-full border-slate-600 text-gray-600 focus:ring-blue-500 focus:border-blue-500 disabled:opacity-50 cursor-pointer" />
         <label th:for="${nomeAtributo + stat.index}" th:text="${propLabel != null ? item[propLabel] : item}"
           class="text-sm text-slate-200 ms-3 cursor-pointer"></label>
@@ -895,7 +900,9 @@
 
           <option th:each="item : ${listaOpcoes}" th:value="${propValue != null ? item[propValue] : item}"
             th:text="${propLabel != null ? item[propLabel] : item}"
-            th:selected="${valorDoObjeto != null and valorDoObjeto == item}">
+            th:selected="${valorDoObjeto != null and
+              #strings.toString(valorDoObjeto) ==
+              (propValue != null ? item[propValue] : item)}">
           </option>
         </select>
 
@@ -926,7 +933,9 @@
 
         <option th:each="item : ${listaOpcoes}" th:value="${propValue != null ? item[propValue] : item}"
           th:text="${propLabel != null ? item[propLabel] : item}"
-          th:selected="${valAtributo != null and (valAtributo == (propValue != null ? item[propValue] : item))}">
+          th:selected="${valAtributo != null and
+            #strings.toString(valAtributo) ==
+            (propValue != null ? item[propValue] : item)}">
         </option>
       </select>
     </div>
