@@ -35,6 +35,10 @@ public class PageWrapper<T> {
                 .collect(Collectors.joining("&"));
     }
 
+    public long getTotalElementos() {
+        return pagina.getTotalElements();
+    }
+
     public List<T> getConteudo() {
         return pagina.getContent();
     }

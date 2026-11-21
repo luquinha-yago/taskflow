@@ -29,7 +29,7 @@ public class Projeto implements Serializable {
     public Projeto() {}
 
     @Id
-    @SequenceGenerator(name="gerador_projeto", sequenceName="comentario_codigo_seq", allocationSize=1)
+    @SequenceGenerator(name="gerador_projeto", sequenceName="projeto_codigo_seq", allocationSize=1)
     @GeneratedValue(generator="gerador_projeto", strategy= GenerationType.SEQUENCE)
     @EqualsAndHashCode.Include
     @ToString.Include
