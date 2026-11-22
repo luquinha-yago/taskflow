@@ -204,6 +204,19 @@
     border-color: rgb(244 63 94 / 30%);
 }
 
+/* Situação "Em revisão" das tarefas */
+.taskflow-status-revisao {
+    color: #fbbf24;
+    background-color: rgb(245 158 11 / 12%);
+    border-color: rgb(245 158 11 / 30%);
+}
+
+/* Prioridade menor para caber no card do kanban */
+.taskflow-prioridade-card {
+    padding: 0.125rem 0.5rem;
+    font-size: 0.6875rem;
+}
+
 .taskflow-projetos-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));

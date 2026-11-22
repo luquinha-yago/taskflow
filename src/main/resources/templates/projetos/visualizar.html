@@ -151,55 +151,148 @@
                 Quadro de tarefas
             </h2>
 
-            <span class="text-xs text-slate-500">
-                Organização por situação
+            <span class="text-xs text-slate-500"
+                  th:text="${pagina.totalElementos + ' tarefa(s) no projeto'}">
             </span>
 
         </div>
 
         <p class="text-sm text-slate-400">
             Acompanhe o andamento das atividades deste projeto.
+            Clique em uma tarefa para ver os detalhes e os comentários.
         </p>
 
     </section>
 
-    <!-- Quadro Kanban -->
+    <!-- Pesquisa de tarefas -->
+    <form th:hx-get="@{/projetos/{codigo}(codigo=${projeto.codigo})}"
+          th:object="${tarefaSearchRequest}"
+          class="w-full rounded-xl border border-slate-700/80
+                 bg-slate-900 p-4">
+
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-x-5">
+
+            <!-- Título -->
+            <div>
+                <div th:replace="~{components/forms :: inputTexto(
+                    textoLabel='Título da tarefa',
+                    nomeAtributo='titulo',
+                    valorAtributo=*{titulo})}">
+                </div>
+            </div>
+
+            <!-- Responsável -->
+            <div th:replace="~{components/forms :: inputBuscavel(
+                textoLabel='Responsável',
+                nomeAtributo='codigoFuncionarioResponsavel',
+                valorAtributo=*{codigoFuncionarioResponsavel},
+                nomeAtributoTexto='nomeFuncionarioResponsavel',
+                valorAtributoTexto=*{nomeFuncionarioResponsavel},
+                urlBusca='/tarefas/pesquisarfuncionario',
+                placeholderBusca='Digite ao menos 3 letras...',
+                isValidado=true)}">
+            </div>
+
+            <!-- Prazo inicial -->
+            <div>
+                <div th:replace="~{components/forms :: inputData(
+                    textoLabel='Prazo inicial',
+                    nomeAtributo='dataPrazoInicial',
+                    valorAtributo=*{dataPrazoInicial})}">
+                </div>
+            </div>
+
+            <!-- Prazo final -->
+            <div>
+                <div th:replace="~{components/forms :: inputData(
+                    textoLabel='Prazo final',
+                    nomeAtributo='dataPrazoFinal',
+                    valorAtributo=*{dataPrazoFinal})}">
+                </div>
+            </div>
+
+            <!-- Prioridade -->
+            <div class="mt-6">
+                <div th:replace="~{components/forms :: selectNormal(
+                    textoLabel='Prioridade',
+                    nomeAtributo='prioridade',
+                    listaOpcoes=${prioridades},
+                    propValue='valor',
+                    propLabel='descricao',
+                    textoPlaceholder='Todas as prioridades',
+                    isValidado=true
+                )}"></div>
+            </div>
+
+        </div>
+
+        <button type="submit"
+                class="mt-5 inline-flex items-center gap-2 px-5 py-3
+                       rounded-lg bg-blue-600 text-white font-medium
+                       hover:bg-blue-500 transition">
+
+            <svg xmlns="http://www.w3.org/2000/svg"
+                 viewBox="0 0 24 24"
+                 fill="none"
+                 stroke="currentColor"
+                 stroke-width="2"
+                 class="h-4 w-4">
+                <circle cx="11" cy="11" r="7"/>
+                <path d="m20 20-4-4"/>
+            </svg>
+
+            Pesquisar tarefas
+        </button>
+
+    </form>
+
+    <!-- Quadro Kanban: uma raia para cada situação da tarefa -->
     <section class="grid grid-cols-1 sm:grid-cols-2
                     xl:grid-cols-4 gap-4 items-start">
 
-        <!-- RAIA: A FAZER -->
-        <div class="flex flex-col min-w-0 overflow-hidden
+        <div th:each="situacao : ${statusTarefas}"
+             th:with="tarefasRaia=${pagina.conteudo.?[statusTarefa.name() == '__${situacao.name()}__']},
+                      corPonto=${situacao.name() == 'A_FAZER' ? 'bg-slate-400' :
+                                 situacao.name() == 'FAZENDO' ? 'bg-blue-400' :
+                                 situacao.name() == 'EM_REVISAO' ? 'bg-amber-400' :
+                                 'bg-emerald-400'},
+                      corContador=${situacao.name() == 'A_FAZER' ? 'bg-slate-700 text-slate-300' :
+                                    situacao.name() == 'FAZENDO' ? 'bg-blue-500/10 text-blue-400' :
+                                    situacao.name() == 'EM_REVISAO' ? 'bg-amber-500/10 text-amber-400' :
+                                    'bg-emerald-500/10 text-emerald-400'}"
+             class="flex flex-col min-w-0 overflow-hidden
                     rounded-xl border border-slate-700
                     bg-slate-900">
 
+            <!-- Cabeçalho da raia -->
             <div class="flex items-center justify-between
                         gap-2 border-b border-slate-700
                         bg-slate-800/60 p-4">
 
                 <div class="flex items-center gap-2">
 
-                    <span class="h-2.5 w-2.5 rounded-full
-                                 bg-slate-400"></span>
+                    <span class="h-2.5 w-2.5 rounded-full"
+                          th:classappend="${corPonto}"></span>
 
-                    <h3 class="font-semibold text-slate-200">
-                        A fazer
+                    <h3 class="font-semibold text-slate-200"
+                        th:text="${situacao.descricao}">
                     </h3>
 
-                    <span class="rounded-md bg-slate-700
-                                 px-2 py-0.5 text-xs
-                                 text-slate-300">
-                        0
+                    <span class="rounded-md px-2 py-0.5 text-xs"
+                          th:classappend="${corContador}"
+                          th:text="${#lists.size(tarefasRaia)}">
                     </span>
 
                 </div>
 
-                <button type="button"
-                        disabled
-                        title="Cadastro de tarefas em desenvolvimento"
-                        class="flex h-8 w-8 items-center
-                               justify-center rounded-lg
-                               text-slate-400 hover:bg-slate-700
-                               disabled:opacity-40 disabled:cursor-not-allowed">
+                <!-- Nova tarefa nesta raia -->
+                <a th:href="@{/tarefas/cadastrar(codigoProjeto=${projeto.codigo}, statusTarefa=${situacao.name()})}"
+                   th:title="${'Nova tarefa em ' + situacao.descricao}"
+                   th:aria-label="${'Nova tarefa em ' + situacao.descricao}"
+                   class="flex h-8 w-8 items-center
+                          justify-center rounded-lg
+                          text-slate-400 hover:bg-slate-700
+                          hover:text-white transition">
 
                     <svg xmlns="http://www.w3.org/2000/svg"
                          viewBox="0 0 24 24"
@@ -211,16 +304,22 @@
                         <path d="M12 5v14M5 12h14"/>
                     </svg>
 
-                </button>
+                </a>
 
             </div>
 
+            <!-- Cards da raia -->
             <div class="flex flex-col gap-3 p-3
                         min-h-64 max-h-[600px]
                         overflow-y-auto">
 
+                <th:block th:each="tarefa : ${tarefasRaia}">
+                    <th:block th:replace="~{tarefas/fragments/tarefa_card :: card(${tarefa})}"></th:block>
+                </th:block>
+
                 <!-- Estado vazio -->
-                <div class="flex flex-col items-center
+                <div th:if="${#lists.isEmpty(tarefasRaia)}"
+                     class="flex flex-col items-center
                             justify-center gap-2
                             rounded-lg border border-dashed
                             border-slate-700 p-6 text-center">
@@ -239,261 +338,22 @@
                         Nenhuma tarefa nesta raia.
                     </p>
 
-                </div>
-
-                <!-- FUTURA IMPLEMENTAÇÃO:
-                     Inserir aqui os cards das tarefas
-                     com status A_FAZER.
-                -->
-
-            </div>
-
-        </div>
-
-        <!-- RAIA: FAZENDO -->
-        <div class="flex flex-col min-w-0 overflow-hidden
-                    rounded-xl border border-slate-700
-                    bg-slate-900">
-
-            <div class="flex items-center justify-between
-                        gap-2 border-b border-slate-700
-                        bg-slate-800/60 p-4">
-
-                <div class="flex items-center gap-2">
-
-                    <span class="h-2.5 w-2.5 rounded-full
-                                 bg-blue-400"></span>
-
-                    <h3 class="font-semibold text-slate-200">
-                        Fazendo
-                    </h3>
-
-                    <span class="rounded-md bg-blue-500/10
-                                 px-2 py-0.5 text-xs text-blue-400">
-                        0
-                    </span>
+                    <a th:href="@{/tarefas/cadastrar(codigoProjeto=${projeto.codigo}, statusTarefa=${situacao.name()})}"
+                       class="text-xs font-medium text-blue-400 hover:text-blue-300">
+                        + Adicionar tarefa
+                    </a>
 
                 </div>
-
-                <button type="button"
-                        disabled
-                        title="Cadastro de tarefas em desenvolvimento"
-                        class="flex h-8 w-8 items-center
-                               justify-center rounded-lg
-                               text-slate-400 hover:bg-slate-700
-                               disabled:opacity-40 disabled:cursor-not-allowed">
-
-                    <svg xmlns="http://www.w3.org/2000/svg"
-                         viewBox="0 0 24 24"
-                         fill="none"
-                         stroke="currentColor"
-                         stroke-width="2"
-                         stroke-linecap="round"
-                         class="h-5 w-5">
-                        <path d="M12 5v14M5 12h14"/>
-                    </svg>
-
-                </button>
-
-            </div>
-
-            <div class="flex flex-col gap-3 p-3
-                        min-h-64 max-h-[600px]
-                        overflow-y-auto">
-
-                <div class="flex flex-col items-center
-                            justify-center gap-2
-                            rounded-lg border border-dashed
-                            border-slate-700 p-6 text-center">
-
-                    <svg xmlns="http://www.w3.org/2000/svg"
-                         viewBox="0 0 24 24"
-                         fill="none"
-                         stroke="currentColor"
-                         stroke-width="1.5"
-                         class="h-7 w-7 text-slate-600">
-                        <circle cx="12" cy="12" r="9"/>
-                        <path d="M12 7v5l3 2"/>
-                    </svg>
-
-                    <p class="text-xs text-slate-500">
-                        Nenhuma tarefa nesta raia.
-                    </p>
-
-                </div>
-
-                <!-- FUTURA IMPLEMENTAÇÃO:
-                     Inserir aqui os cards das tarefas
-                     com status FAZENDO.
-                -->
-
-            </div>
-
-        </div>
-
-        <!-- RAIA: EM REVISÃO -->
-        <div class="flex flex-col min-w-0 overflow-hidden
-                    rounded-xl border border-slate-700
-                    bg-slate-900">
-
-            <div class="flex items-center justify-between
-                        gap-2 border-b border-slate-700
-                        bg-slate-800/60 p-4">
-
-                <div class="flex items-center gap-2">
-
-                    <span class="h-2.5 w-2.5 rounded-full
-                                 bg-amber-400"></span>
-
-                    <h3 class="font-semibold text-slate-200">
-                        Em revisão
-                    </h3>
-
-                    <span class="rounded-md bg-amber-500/10
-                                 px-2 py-0.5 text-xs text-amber-400">
-                        0
-                    </span>
-
-                </div>
-
-                <button type="button"
-                        disabled
-                        title="Cadastro de tarefas em desenvolvimento"
-                        class="flex h-8 w-8 items-center
-                               justify-center rounded-lg
-                               text-slate-400 hover:bg-slate-700
-                               disabled:opacity-40 disabled:cursor-not-allowed">
-
-                    <svg xmlns="http://www.w3.org/2000/svg"
-                         viewBox="0 0 24 24"
-                         fill="none"
-                         stroke="currentColor"
-                         stroke-width="2"
-                         stroke-linecap="round"
-                         class="h-5 w-5">
-                        <path d="M12 5v14M5 12h14"/>
-                    </svg>
-
-                </button>
-
-            </div>
-
-            <div class="flex flex-col gap-3 p-3
-                        min-h-64 max-h-[600px]
-                        overflow-y-auto">
-
-                <div class="flex flex-col items-center
-                            justify-center gap-2
-                            rounded-lg border border-dashed
-                            border-slate-700 p-6 text-center">
-
-                    <svg xmlns="http://www.w3.org/2000/svg"
-                         viewBox="0 0 24 24"
-                         fill="none"
-                         stroke="currentColor"
-                         stroke-width="1.5"
-                         class="h-7 w-7 text-slate-600">
-                        <circle cx="12" cy="12" r="9"/>
-                        <path d="M12 8v4l2 2"/>
-                    </svg>
-
-                    <p class="text-xs text-slate-500">
-                        Nenhuma tarefa nesta raia.
-                    </p>
-
-                </div>
-
-                <!-- FUTURA IMPLEMENTAÇÃO:
-                     Inserir aqui os cards das tarefas
-                     com status EM_REVISAO.
-                -->
-
-            </div>
-
-        </div>
-
-        <!-- RAIA: FEITO -->
-        <div class="flex flex-col min-w-0 overflow-hidden
-                    rounded-xl border border-slate-700
-                    bg-slate-900">
-
-            <div class="flex items-center justify-between
-                        gap-2 border-b border-slate-700
-                        bg-slate-800/60 p-4">
-
-                <div class="flex items-center gap-2">
-
-                    <span class="h-2.5 w-2.5 rounded-full
-                                 bg-emerald-400"></span>
-
-                    <h3 class="font-semibold text-slate-200">
-                        Feito
-                    </h3>
-
-                    <span class="rounded-md bg-emerald-500/10
-                                 px-2 py-0.5 text-xs text-emerald-400">
-                        0
-                    </span>
-
-                </div>
-
-                <button type="button"
-                        disabled
-                        title="Cadastro de tarefas em desenvolvimento"
-                        class="flex h-8 w-8 items-center
-                               justify-center rounded-lg
-                               text-slate-400 hover:bg-slate-700
-                               disabled:opacity-40 disabled:cursor-not-allowed">
-
-                    <svg xmlns="http://www.w3.org/2000/svg"
-                         viewBox="0 0 24 24"
-                         fill="none"
-                         stroke="currentColor"
-                         stroke-width="2"
-                         stroke-linecap="round"
-                         class="h-5 w-5">
-                        <path d="M12 5v14M5 12h14"/>
-                    </svg>
-
-                </button>
-
-            </div>
-
-            <div class="flex flex-col gap-3 p-3
-                        min-h-64 max-h-[600px]
-                        overflow-y-auto">
-
-                <div class="flex flex-col items-center
-                            justify-center gap-2
-                            rounded-lg border border-dashed
-                            border-slate-700 p-6 text-center">
-
-                    <svg xmlns="http://www.w3.org/2000/svg"
-                         viewBox="0 0 24 24"
-                         fill="none"
-                         stroke="currentColor"
-                         stroke-width="1.5"
-                         class="h-7 w-7 text-slate-600">
-                        <circle cx="12" cy="12" r="9"/>
-                        <path d="m8 12 2.5 2.5L16 9"/>
-                    </svg>
-
-                    <p class="text-xs text-slate-500">
-                        Nenhuma tarefa nesta raia.
-                    </p>
-
-                </div>
-
-                <!-- FUTURA IMPLEMENTAÇÃO:
-                     Inserir aqui os cards das tarefas
-                     com status FEITO.
-                -->
 
             </div>
 
         </div>
 
     </section>
+
+    <!-- Paginação -->
+    <div th:replace="~{components/paginacao :: paginacao(${pagina})}">
+    </div>
 
 </main>
 

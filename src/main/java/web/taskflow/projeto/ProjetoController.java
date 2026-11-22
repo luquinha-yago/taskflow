@@ -24,6 +24,7 @@ import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import web.taskflow.common.enums.Prioridade;
 import web.taskflow.common.enums.StatusProjeto;
+import web.taskflow.common.enums.StatusTarefa;
 import web.taskflow.core.web.notification.NotificacaoSweetAlert2;
 import web.taskflow.core.web.notification.TipoNotificacaoSweetAlert2;
 import web.taskflow.core.web.pagination.PageWrapper;
@@ -33,6 +34,9 @@ import web.taskflow.projeto.dto.ProjetoCreateRequest;
 import web.taskflow.projeto.dto.ProjetoResponse;
 import web.taskflow.projeto.dto.ProjetoSearchRequest;
 import web.taskflow.projeto.dto.ProjetoUpdateRequest;
+import web.taskflow.tarefa.TarefaService;
+import web.taskflow.tarefa.dto.TarefaResponse;
+import web.taskflow.tarefa.dto.TarefaSearchRequest;
 
 @Slf4j
 @Controller
@@ -41,12 +45,15 @@ public class ProjetoController {
 
     private final ProjetoService projetoService;
     private final DepartamentoService departamentoService;
+    private final TarefaService tarefaService;
 
     public ProjetoController(ProjetoService projetoService,
-                             DepartamentoService departamentoService
+                             DepartamentoService departamentoService,
+                             TarefaService tarefaService
     ) {
         this.projetoService = projetoService;
         this.departamentoService = departamentoService;
+        this.tarefaService = tarefaService;
     }
 
     @GetMapping("/cadastrar")
@@ -152,10 +159,31 @@ public class ProjetoController {
     }
 
     @GetMapping("/{codigo}")
-    public String abrirProjeto(@PathVariable("codigo") Long codigo, Model model,
+    public String abrirProjeto(@PathVariable("codigo") Long codigo,
+                              TarefaSearchRequest filtro, Model model,
+                              @PageableDefault(size = 40) @SortDefault(sort = "dataPrazo", direction = Sort.Direction.ASC) Pageable pageable,
+                              HttpServletRequest request,
                               HtmxRequest htmxRequest){
         ProjetoResponse projeto = projetoService.buscarParaVisualizar(codigo);
+
+        // As tarefas do quadro são sempre as do projeto aberto
+        TarefaSearchRequest filtroTarefas = new TarefaSearchRequest(
+                filtro.titulo(),
+                filtro.dataCriacaoInicial(), filtro.dataCriacaoFinal(),
+                filtro.dataPrazoInicial(), filtro.dataPrazoFinal(),
+                filtro.dataConclusaoInicial(), filtro.dataConclusaoFinal(),
+                filtro.statusTarefa(), filtro.prioridade(),
+                codigo, projeto.nome(),
+                filtro.codigoFuncionarioResponsavel(), filtro.nomeFuncionarioResponsavel());
+
+        Page<TarefaResponse> tarefas = tarefaService.pesquisar(filtroTarefas, pageable);
+        log.info("Tarefas do projeto {}: {}", codigo, tarefas.getContent());
+
         model.addAttribute("projeto", projeto);
+        model.addAttribute("tarefaSearchRequest", filtroTarefas);
+        model.addAttribute("pagina", new PageWrapper<>(tarefas, request));
+        model.addAttribute("statusTarefas", StatusTarefa.values());
+        model.addAttribute("prioridades", Prioridade.values());
         return htmxRequest.isHtmxRequest() ? "projetos/visualizar :: conteudo" : "projetos/visualizar";
     }
 
