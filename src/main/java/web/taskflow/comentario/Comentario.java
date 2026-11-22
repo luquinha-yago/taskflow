@@ -36,9 +36,9 @@ public class Comentario implements Serializable {
     @ToString.Include
     private String comentario;
 
-    @Column(name = "hora_registro")
+    @Column(name = "data_hora_registro")
     @ToString.Include
-    private LocalDateTime hora_registro;
+    private LocalDateTime dataHoraRegistro;
 
     @JoinColumn(name = "codigo_funcionario")
     @ManyToOne(fetch = FetchType.LAZY)
