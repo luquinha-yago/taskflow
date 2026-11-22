@@ -485,6 +485,199 @@
   </th:block>
 </th:block>
 
+
+<th:block th:fragment="inputDataHora(
+    textoLabel,
+    nomeAtributo,
+    valorAtributo,
+    isDisabled,
+    isValidado
+)"
+th:with="
+    disabledFlag=${isDisabled != null and isDisabled},
+    validFlag=${isValidado != null and isValidado}"
+xmlns:th="http://www.thymeleaf.org">
+
+    <label th:for="${nomeAtributo + '-data'}"
+           th:text="${textoLabel}"
+           class="block text-slate-200 font-medium mb-2 mt-6">
+        Data e hora
+    </label>
+
+    <th:block th:if="${validFlag}">
+        <div class="relative"
+             th:with="temErro=${#fields.hasErrors('__${nomeAtributo}__')}">
+
+            <div class="grid grid-cols-2 gap-3">
+
+                <!-- Campo de data -->
+                <div class="relative">
+                    <input type="text"
+                           th:id="${nomeAtributo + '-data'}"
+                           th:value="${valorAtributo != null ? #temporals.format(valorAtributo, 'dd/MM/yyyy') : ''}"
+                           th:disabled="${disabledFlag}"
+                           data-data-hora="true"
+                           autocomplete="off"
+                           placeholder="DD/MM/AAAA"
+                           maxlength="10"
+                           th:class="|placeholder:text-slate-400 bg-[#172235] componentedata taskflow-form-control block w-full px-4 py-3 pr-12 text-white disabled:opacity-50 rounded-lg border ${temErro ? 'border-red-300 focus:border-red-500 focus:ring-red-500' : 'border-slate-600 focus:border-blue-500 focus:ring-blue-500'}|"
+                           style="background-color: #172235 !important; color: #ffffff !important; color-scheme: dark;" />
+
+                    <button type="button"
+                            th:id="'btn-' + ${nomeAtributo} + '-data'"
+                            th:disabled="${disabledFlag}"
+                            class="absolute inset-y-0 right-0 flex items-center px-3 text-slate-400 hover:text-blue-400 hover:bg-transparent focus-visible:text-blue-400 !bg-transparent hover:!bg-transparent disabled:opacity-50 focus:outline-none"
+                            aria-label="Selecionar data">
+
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                             class="h-6 w-6"
+                             fill="none"
+                             viewBox="0 0 24 24"
+                             stroke="currentColor">
+                            <path stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                  stroke-width="2"
+                                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Campo de hora -->
+                <div class="relative">
+                    <input type="text"
+                           th:id="${nomeAtributo + '-hora'}"
+                           th:value="${valorAtributo != null ? #temporals.format(valorAtributo, 'HH:mm') : ''}"
+                           th:disabled="${disabledFlag}"
+                           autocomplete="off"
+                           placeholder="00:00"
+                           maxlength="5"
+                           th:class="|placeholder:text-slate-400 bg-[#172235] componentehora taskflow-form-control block w-full px-4 py-3 pr-12 text-white disabled:opacity-50 rounded-lg border ${temErro ? 'border-red-300 focus:border-red-500 focus:ring-red-500' : 'border-slate-600 focus:border-blue-500 focus:ring-blue-500'}|"
+                           style="background-color: #172235 !important; color: #ffffff !important; color-scheme: dark;" />
+
+                    <button type="button"
+                            th:id="'btn-' + ${nomeAtributo} + '-hora'"
+                            th:disabled="${disabledFlag}"
+                            class="absolute inset-y-0 right-0 flex items-center px-3 text-slate-400 hover:text-blue-400 hover:bg-transparent focus-visible:text-blue-400 !bg-transparent hover:!bg-transparent disabled:opacity-50 focus:outline-none"
+                            aria-label="Selecionar horário">
+
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                             fill="currentColor"
+                             class="h-6 w-6"
+                             viewBox="0 0 16 16">
+                            <path d="M8.5 5a.5.5 0 0 0-1 0v2.5H6a.5.5 0 0 0 0 1h2a.5.5 0 0 0 .5-.5z" />
+                            <path d="M5.667 16C4.747 16 4 15.254 4 14.333v-1.86A6 6 0 0 1 2 8c0-1.777.772-3.374 2-4.472V1.667C4 .747 4.746 0 5.667 0h4.666C11.253 0 12 .746 12 1.667v1.86a6 6 0 0 1 1.918 3.48.502.502 0 0 1 .582.493v1a.5.5 0 0 1-.582.493A6 6 0 0 1 12 12.473v1.86c0 .92-.746 1.667-1.667 1.667zM13 8A5 5 0 1 0 3 8a5 5 0 0 0 10 0" />
+                        </svg>
+                    </button>
+                </div>
+
+            </div>
+
+            <!-- Campo real vinculado ao formulário -->
+            <input type="hidden"
+                   th:field="*{__${nomeAtributo}__}" />
+
+            <!-- Ícone de erro -->
+            <div th:if="${temErro}"
+                 class="end-0 absolute items-center inset-y-0 flex pointer-events-none justify-center pe-12">
+                <svg class="shrink-0 size-4 text-red-500"
+                     xmlns="http://www.w3.org/2000/svg"
+                     width="24"
+                     height="24"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="2"
+                     stroke-linecap="round"
+                     stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" x2="12" y1="8" y2="12"></line>
+                    <line x1="12" x2="12.01" y1="16" y2="16"></line>
+                </svg>
+            </div>
+        </div>
+
+        <!-- Mensagem de validação -->
+        <p th:if="${#fields.hasErrors('__${nomeAtributo}__')}"
+           th:each="erro : ${#fields.errors('__${nomeAtributo}__')}"
+           th:text="${erro} + '. '"
+           class="text-sm text-red-600 mt-2">
+        </p>
+    </th:block>
+
+    <th:block th:unless="${validFlag}">
+        <div class="grid grid-cols-2 gap-3">
+
+            <!-- Campo de data -->
+            <div class="relative">
+                <input type="text"
+                       th:id="${nomeAtributo + '-data'}"
+                       th:value="${valorAtributo != null ? #temporals.format(valorAtributo, 'dd/MM/yyyy') : ''}"
+                       th:disabled="${disabledFlag}"
+                       data-data-hora="true"
+                       autocomplete="off"
+                       placeholder="DD/MM/AAAA"
+                       maxlength="10"
+                       class="placeholder:text-slate-400 bg-[#172235] componentedata taskflow-form-control block w-full px-4 py-3 pr-12 text-white disabled:opacity-50 border border-slate-600 rounded-lg focus:border-blue-500 focus:ring-blue-500"
+                       style="background-color: #172235 !important; color: #ffffff !important; color-scheme: dark;" />
+
+                <button type="button"
+                        th:id="'btn-' + ${nomeAtributo} + '-data'"
+                        th:disabled="${disabledFlag}"
+                        class="absolute inset-y-0 right-0 flex items-center px-3 text-slate-400 hover:text-blue-400 hover:bg-transparent focus-visible:text-blue-400 !bg-transparent hover:!bg-transparent disabled:opacity-50 focus:outline-none"
+                        aria-label="Selecionar data">
+
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                         class="h-6 w-6"
+                         fill="none"
+                         viewBox="0 0 24 24"
+                         stroke="currentColor">
+                        <path stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                              d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Campo de hora -->
+            <div class="relative">
+                <input type="text"
+                       th:id="${nomeAtributo + '-hora'}"
+                       th:value="${valorAtributo != null ? #temporals.format(valorAtributo, 'HH:mm') : ''}"
+                       th:disabled="${disabledFlag}"
+                       autocomplete="off"
+                       placeholder="00:00"
+                       maxlength="5"
+                       class="placeholder:text-slate-400 bg-[#172235] componentehora taskflow-form-control block w-full px-4 py-3 pr-12 text-white disabled:opacity-50 border border-slate-600 rounded-lg focus:border-blue-500 focus:ring-blue-500"
+                       style="background-color: #172235 !important; color: #ffffff !important; color-scheme: dark;" />
+
+                <button type="button"
+                        th:id="'btn-' + ${nomeAtributo} + '-hora'"
+                        th:disabled="${disabledFlag}"
+                        class="absolute inset-y-0 right-0 flex items-center px-3 text-slate-400 hover:text-blue-400 hover:bg-transparent focus-visible:text-blue-400 !bg-transparent hover:!bg-transparent disabled:opacity-50 focus:outline-none"
+                        aria-label="Selecionar horário">
+
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                         fill="currentColor"
+                         class="h-6 w-6"
+                         viewBox="0 0 16 16">
+                        <path d="M8.5 5a.5.5 0 0 0-1 0v2.5H6a.5.5 0 0 0 0 1h2a.5.5 0 0 0 .5-.5z" />
+                        <path d="M5.667 16C4.747 16 4 15.254 4 14.333v-1.86A6 6 0 0 1 2 8c0-1.777.772-3.374 2-4.472V1.667C4 .747 4.746 0 5.667 0h4.666C11.253 0 12 .746 12 1.667v1.86a6 6 0 0 1 1.918 3.48.502.502 0 0 1 .582.493v1a.5.5 0 0 1-.582.493A6 6 0 0 1 12 12.473v1.86c0 .92-.746 1.667-1.667 1.667zM13 8A5 5 0 1 0 3 8a5 5 0 0 0 10 0" />
+                    </svg>
+                </button>
+            </div>
+
+        </div>
+
+        <!-- Campo enviado ao Spring -->
+        <input type="hidden"
+               th:id="${nomeAtributo}"
+               th:name="${nomeAtributo}"
+               th:value="${valorAtributo != null ? #temporals.format(valorAtributo, 'yyyy-MM-dd''T''HH:mm') : ''}" />
+    </th:block>
+
+</th:block>
+
 <th:block th:fragment="inputNumero" th:with="
     disabledFlag=${isDisabled != null and isDisabled},
     validFlag=${isValidado != null and isValidado},
