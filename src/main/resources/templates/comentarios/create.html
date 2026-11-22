@@ -1,0 +1,67 @@
+<form th:action="@{/comentarios}"
+      th:hx-post="@{/comentarios}"
+      th:object="${comentarioCreateRequest}"
+      th:fragment="create"
+      class="flex gap-3 border-b border-slate-800 p-5">
+
+    <!-- Código da tarefa -->
+    <input type="hidden" th:field="*{codigoTarefa}">
+
+    <div class="flex h-9 w-9 shrink-0 items-center justify-center
+                rounded-full bg-blue-500/15 text-blue-300">
+
+        <svg xmlns="http://www.w3.org/2000/svg"
+             viewBox="0 0 24 24"
+             fill="none"
+             stroke="currentColor"
+             stroke-width="1.8"
+             stroke-linecap="round"
+             stroke-linejoin="round"
+             class="h-4 w-4">
+            <circle cx="12" cy="8" r="4"/>
+            <path d="M4 21a8 8 0 0 1 16 0"/>
+        </svg>
+
+    </div>
+
+    <div class="flex flex-1 flex-col gap-3 min-w-0">
+
+        <textarea th:field="*{comentario}"
+                  rows="3"
+                  placeholder="Escreva um comentário sobre esta tarefa..."
+                  class="taskflow-form-control placeholder:text-slate-400
+                         bg-[#172235] block w-full px-4 py-3 text-sm
+                         text-white border border-slate-600 rounded-lg
+                         focus:border-blue-500 focus:ring-blue-500"
+                  style="background-color: #172235 !important;
+                         color: #ffffff !important;
+                         color-scheme: dark;">
+        </textarea>
+
+        <div class="flex justify-end">
+
+            <button type="submit"
+                    class="inline-flex items-center gap-2 rounded-lg
+                           bg-blue-600 px-4 py-2 text-sm font-medium
+                           text-white hover:bg-blue-500 transition">
+
+                <svg xmlns="http://www.w3.org/2000/svg"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="1.8"
+                     stroke-linecap="round"
+                     stroke-linejoin="round"
+                     class="h-4 w-4">
+                    <path d="m22 2-7 20-4-9-9-4Z"/>
+                    <path d="M22 2 11 13"/>
+                </svg>
+
+                Comentar
+            </button>
+
+        </div>
+
+    </div>
+
+</form>
