@@ -1,6 +1,11 @@
 package web.taskflow.tarefa;
 
 import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.data.web.SortDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -15,12 +20,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import io.github.wimdeblauwe.htmx.spring.boot.mvc.HtmxRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+import web.taskflow.comentario.ComentarioService;
+import web.taskflow.comentario.dto.ComentarioCreateRequest;
+import web.taskflow.comentario.dto.ComentarioResponse;
+import web.taskflow.comentario.dto.ComentarioSearchRequest;
 import web.taskflow.common.enums.Prioridade;
 import web.taskflow.common.enums.StatusTarefa;
 import web.taskflow.core.web.notification.NotificacaoSweetAlert2;
 import web.taskflow.core.web.notification.TipoNotificacaoSweetAlert2;
+import web.taskflow.core.web.pagination.PageWrapper;
 import web.taskflow.funcionario.FuncionarioService;
 import web.taskflow.funcionario.dto.FuncionarioResponse;
 import web.taskflow.projeto.ProjetoService;
@@ -37,20 +48,19 @@ public class TarefaController {
     private final TarefaService tarefaService;
     private final ProjetoService projetoService;
     private final FuncionarioService funcionarioService;
+    private final ComentarioService comentarioService;
 
     public TarefaController(TarefaService tarefaService,
                             ProjetoService projetoService,
-                            FuncionarioService funcionarioService
+                            FuncionarioService funcionarioService,
+                            ComentarioService comentarioService
     ) {
         this.tarefaService = tarefaService;
         this.projetoService = projetoService;
         this.funcionarioService = funcionarioService;
+        this.comentarioService = comentarioService;
     }
 
-    /*
-     * A tarefa sempre é criada dentro de um projeto (botão "+" da raia do kanban).
-     * O projeto e a situação vêm da raia que foi clicada.
-     */
     @GetMapping("/cadastrar")
     public String abrirFormulario(@RequestParam("codigoProjeto") Long codigoProjeto,
                                   @RequestParam(value = "statusTarefa", required = false) StatusTarefa statusTarefa,
@@ -96,11 +106,44 @@ public class TarefaController {
     }
 
     @GetMapping("/{codigo}")
-    public String abrirTarefa(@PathVariable("codigo") Long codigo, Model model,
-                              HtmxRequest htmxRequest) {
+    public String abrirTarefa(
+            @PathVariable("codigo") Long codigo,
+            ComentarioSearchRequest filtro,
+            @PageableDefault(size = 5)
+            @SortDefault(sort = "dataHoraRegistro", direction = Sort.Direction.DESC)
+            Pageable pageable,
+            Model model,
+            HttpServletRequest request,
+            HtmxRequest htmxRequest) {
+
         TarefaResponse tarefa = tarefaService.buscarParaVisualizar(codigo);
+        ComentarioSearchRequest filtroComentarios = new ComentarioSearchRequest(
+            filtro.dataHoraRegistroInicial(),
+            filtro.dataHoraRegistroFinal(),
+            filtro.codigoFuncionario(),
+            filtro.nomeFuncionario()
+        );
+        Page<ComentarioResponse> comentarios =
+                comentarioService.pesquisar(
+                        filtroComentarios,
+                        codigo,
+                        pageable
+                );
+        log.info("Comentarios da tarefa {}: {}", codigo, comentarios.getContent());
         model.addAttribute("tarefa", tarefa);
-        return htmxRequest.isHtmxRequest() ? "tarefas/visualizar :: conteudo" : "tarefas/visualizar";
+        model.addAttribute(
+            "comentarioCreateRequest",
+            new ComentarioCreateRequest(null, null, null, null, codigo, tarefa.titulo())
+        );
+        model.addAttribute("comentarioSearchRequest", filtroComentarios);
+        model.addAttribute(
+            "comentarios",
+            new PageWrapper<>(comentarios, request)
+        );
+
+        return htmxRequest.isHtmxRequest()
+                ? "tarefas/visualizar :: conteudo"
+                : "tarefas/visualizar";
     }
 
     @GetMapping("/{codigo}/editar")

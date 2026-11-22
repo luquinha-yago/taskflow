@@ -67,6 +67,7 @@ class AppVacinacao {
         this.prepararMoney(container);
         this.prepararData(container);
         this.prepararHora(container);
+        this.prepararDataHora(container);
         this.prepararConfirmacoes(container);
         this.prepararBusca(container);
         this.prepararCpf(container);
@@ -350,6 +351,62 @@ class AppVacinacao {
             }
         });
     }
+
+    static prepararDataHora(container = document) {
+        let campos = container.querySelectorAll(
+            '[data-data-hora="true"]'
+        );
+
+        if (container.matches?.('[data-data-hora="true"]')) {
+            campos = [container];
+        }
+
+        campos.forEach((campoData) => {
+            const prefixo = campoData.id.replace(/-data$/, '');
+
+            const campoHora = container.querySelector(`#${prefixo}-hora`);
+            const campoOculto = container.querySelector(`#${prefixo}`);
+
+            if (!campoHora || !campoOculto) {
+                return;
+            }
+
+            const sincronizar = () => {
+                const data = campoData.value;
+                const hora = campoHora.value;
+
+                if (!data || !hora || data.length !== 10 || hora.length !== 5) {
+                    campoOculto.value = '';
+                    return;
+                }
+
+                const [dia, mes, ano] = data.split('/');
+                const [horas, minutos] = hora.split(':');
+
+                const dataValida = new Date(+ano, +mes - 1, +dia);
+
+                if (
+                    dataValida.getFullYear() !== +ano ||
+                    dataValida.getMonth() !== +mes - 1 ||
+                    dataValida.getDate() !== +dia ||
+                    +horas > 23 ||
+                    +minutos > 59
+                ) {
+                    campoOculto.value = '';
+                    return;
+                }
+
+                campoOculto.value =
+                    `${ano}-${mes}-${dia}T${horas}:${minutos}`;
+            };
+
+            campoData.addEventListener('input', sincronizar);
+            campoHora.addEventListener('input', sincronizar);
+
+            sincronizar();
+        });
+    }
+
 
     static prepararCpf(container = document) {
         let inputs = container.querySelectorAll(this.CONFIG.seletores.cpf);

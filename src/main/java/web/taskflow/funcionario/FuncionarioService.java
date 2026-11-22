@@ -68,6 +68,12 @@ public class FuncionarioService {
         }
     }
 
+    public FuncionarioResponse buscarParaVisualizar(Long codigo) {
+        Funcionario funcionario = funcionarioRepository.findByCodigoAndStatus(codigo, Status.ATIVO)
+        .orElseThrow(() -> new EntidadeNaoEncontradaException("Funcionário não encontrado"));
+        return toResponse(funcionario);
+    }
+
     public List<FuncionarioResponse> buscarPeloNome(String nome) {
         return funcionarioRepository.findTop10ByNomeContainingIgnoreCaseAndStatusOrderByNomeAsc(nome, Status.ATIVO).stream()
             .map(this::toResponse)

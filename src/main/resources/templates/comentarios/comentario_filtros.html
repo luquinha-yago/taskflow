@@ -1,0 +1,122 @@
+<form th:fragment="comentarioFiltros"
+      th:object="${comentarioSearchRequest}"
+      th:hx-get="@{/tarefas/{codigo}(codigo=${tarefa.codigo})}"
+      hx-target="#comentarios-conteudo"
+      hx-select="#comentarios-conteudo"
+      hx-swap="outerHTML"
+      x-data="{ filtrosAbertos: false }"
+      class="border-b border-slate-800 p-5">
+
+    <!-- Cabeçalho dos filtros -->
+    <div class="flex items-center justify-between gap-3">
+
+        <div>
+            <h3 class="text-sm font-semibold text-slate-200">
+                Filtrar comentários
+            </h3>
+
+            <p class="text-xs text-slate-500 mt-1">
+                Encontre comentários por período ou funcionário.
+            </p>
+        </div>
+
+        <button type="button"
+                @click="filtrosAbertos = !filtrosAbertos"
+                class="inline-flex items-center gap-2 rounded-lg
+                       border border-slate-700 px-3 py-2
+                       text-xs font-medium text-slate-300
+                       hover:bg-slate-800 hover:text-white transition">
+
+            <svg xmlns="http://www.w3.org/2000/svg"
+                 viewBox="0 0 24 24"
+                 fill="none"
+                 stroke="currentColor"
+                 stroke-width="1.8"
+                 stroke-linecap="round"
+                 stroke-linejoin="round"
+                 class="h-4 w-4">
+                <path d="M4 6h16"/>
+                <path d="M7 12h10"/>
+                <path d="M10 18h4"/>
+            </svg>
+
+            <span x-text="filtrosAbertos ? 'Ocultar filtros' : 'Mostrar filtros'">
+                Mostrar filtros
+            </span>
+
+            <svg xmlns="http://www.w3.org/2000/svg"
+                 viewBox="0 0 24 24"
+                 fill="none"
+                 stroke="currentColor"
+                 stroke-width="1.8"
+                 stroke-linecap="round"
+                 stroke-linejoin="round"
+                 class="h-4 w-4 transition-transform"
+                 :class="{ 'rotate-180': filtrosAbertos }">
+                <path d="m6 9 6 6 6-6"/>
+            </svg>
+
+        </button>
+
+    </div>
+
+    <!-- Campos recolhíveis -->
+    <div x-show="filtrosAbertos"
+         x-cloak
+         x-transition
+         class="mt-5 space-y-4">
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+            <!-- Data inicial -->
+            <div th:replace="~{
+                components/forms :: inputDataHora(
+                    'Data e hora inicial',
+                    'dataHoraRegistroInicial',
+                    *{dataHoraRegistroInicial},
+                    false,
+                    true
+                )
+            }"></div>
+
+            <!-- Data final -->
+            <div th:replace="~{
+                components/forms :: inputDataHora(
+                    'Data e hora final',
+                    'dataHoraRegistroFinal',
+                    *{dataHoraRegistroFinal},
+                    false,
+                    true
+                )
+            }"></div>
+
+            <!-- Código do funcionário -->
+            <div th:replace="~{components/forms :: inputBuscavel(
+                textoLabel='Funcionário',
+                nomeAtributo='codigoFuncionario',
+                valorAtributo=*{codigoFuncionario},
+                nomeAtributoTexto='nomeFuncionario',
+                valorAtributoTexto=*{nomeFuncionario},
+                urlBusca='/comentarios/pesquisarfuncionario',
+                placeholderBusca='Digite ao menos 3 letras...',
+                isValidado=true)}">
+            </div>
+
+        </div>
+
+        <div class="flex justify-end">
+
+            <button type="submit"
+                    class="inline-flex items-center gap-2 rounded-lg
+                           bg-blue-600 px-4 py-2.5 text-sm font-medium
+                           text-white hover:bg-blue-500 transition">
+
+                Filtrar comentários
+
+            </button>
+
+        </div>
+
+    </div>
+
+</form>

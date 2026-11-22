@@ -162,22 +162,25 @@
             </section>
 
             <!-- Comentários -->
-            <section class="rounded-xl border border-slate-700/80
+            <section id="comentarios-conteudo"
+                     th:fragment="comentariosConteudo"
+                     class="rounded-xl border border-slate-700/80
                             bg-slate-900 overflow-hidden">
 
+                <!-- Cabeçalho -->
                 <div class="flex items-center justify-between gap-3
                             border-b border-slate-700 bg-slate-800/60 p-5">
 
                     <div class="flex items-center gap-2">
 
                         <svg xmlns="http://www.w3.org/2000/svg"
-                             viewBox="0 0 24 24"
-                             fill="none"
-                             stroke="currentColor"
-                             stroke-width="1.8"
-                             stroke-linecap="round"
-                             stroke-linejoin="round"
-                             class="h-5 w-5 text-blue-400">
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.8"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            class="h-5 w-5 text-blue-400">
                             <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
                         </svg>
 
@@ -186,8 +189,8 @@
                         </h2>
 
                         <span class="rounded-md bg-slate-700 px-2 py-0.5
-                                     text-xs text-slate-300"
-                              th:text="${comentarios != null ? #lists.size(comentarios) : 0}">
+                                    text-xs text-slate-300"
+                            th:text="${comentarios != null ? comentarios.totalElementos : 0}">
                             0
                         </span>
 
@@ -195,137 +198,70 @@
 
                 </div>
 
-                <!-- Novo comentário -->
-                <form class="flex gap-3 border-b border-slate-800 p-5">
-
-                    <div class="flex h-9 w-9 shrink-0 items-center justify-center
-                                rounded-full bg-blue-500/15 text-blue-300">
-
-                        <svg xmlns="http://www.w3.org/2000/svg"
-                             viewBox="0 0 24 24"
-                             fill="none"
-                             stroke="currentColor"
-                             stroke-width="1.8"
-                             stroke-linecap="round"
-                             stroke-linejoin="round"
-                             class="h-4 w-4">
-                            <circle cx="12" cy="8" r="4"/>
-                            <path d="M4 21a8 8 0 0 1 16 0"/>
-                        </svg>
-
-                    </div>
-
-                    <div class="flex flex-1 flex-col gap-3 min-w-0">
-
-                        <textarea name="comentario"
-                                  rows="3"
-                                  placeholder="Escreva um comentário sobre esta tarefa..."
-                                  class="taskflow-form-control placeholder:text-slate-400 bg-[#172235]
-                                         block w-full px-4 py-3 text-sm text-white
-                                         border border-slate-600 rounded-lg
-                                         focus:border-blue-500 focus:ring-blue-500"
-                                  style="background-color: #172235 !important; color: #ffffff !important; color-scheme: dark;"></textarea>
-
-                        <div class="flex justify-end">
-
-                            <!-- FUTURA IMPLEMENTAÇÃO:
-                                 enviar o comentário para o backend (hx-post).
-                            -->
-                            <button type="button"
-                                    disabled
-                                    title="Cadastro de comentários em desenvolvimento"
-                                    class="inline-flex items-center gap-2 rounded-lg
-                                           bg-blue-600 px-4 py-2 text-sm font-medium
-                                           text-white hover:bg-blue-500 transition
-                                           disabled:opacity-40 disabled:cursor-not-allowed">
-
-                                <svg xmlns="http://www.w3.org/2000/svg"
-                                     viewBox="0 0 24 24"
-                                     fill="none"
-                                     stroke="currentColor"
-                                     stroke-width="1.8"
-                                     stroke-linecap="round"
-                                     stroke-linejoin="round"
-                                     class="h-4 w-4">
-                                    <path d="m22 2-7 20-4-9-9-4Z"/>
-                                    <path d="M22 2 11 13"/>
-                                </svg>
-
-                                Comentar
-                            </button>
-
-                        </div>
-
-                    </div>
-
-                </form>
+                <!-- Filtros de comentários -->
+                <th:block th:replace="~{comentarios/comentario_filtros :: comentarioFiltros}"></th:block>
 
                 <!-- Lista de comentários -->
                 <ul class="flex flex-col divide-y divide-slate-800">
 
-                    <!-- Card de comentário (preenchido quando houver a lista "comentarios" no model) -->
-                    <li th:each="comentario : ${comentarios}"
-                        class="flex gap-3 p-5">
+                    <!-- Cards -->
+                    <th:block th:if="${comentarios != null and !comentarios.vazia}">
 
-                        <span class="flex h-9 w-9 shrink-0 items-center justify-center
-                                     rounded-full bg-slate-700 text-sm font-semibold
-                                     text-slate-200"
-                              th:text="${#strings.toUpperCase(#strings.substring(comentario.nomeFuncionario, 0, 1))}">
-                        </span>
+                        <th:block th:each="comentario : ${comentarios.conteudo}">
 
-                        <div class="flex-1 min-w-0">
+                            <th:block th:replace="~{
+                                comentarios/fragments/comentario_card
+                                :: comentarioCard(${comentario})
+                            }"></th:block>
 
-                            <div class="flex flex-wrap items-center gap-x-2 gap-y-1">
+                        </th:block>
 
-                                <p class="text-sm font-semibold text-slate-200"
-                                   th:text="${comentario.nomeFuncionario}">
-                                </p>
-
-                                <span class="text-xs text-slate-500"
-                                      th:text="${#temporals.format(comentario.horaRegistro, 'dd/MM/yyyy HH:mm')}">
-                                </span>
-
-                            </div>
-
-                            <p class="mt-1 text-sm text-slate-400 leading-relaxed
-                                      whitespace-pre-line break-words"
-                               th:text="${comentario.comentario}">
-                            </p>
-
-                        </div>
-
-                    </li>
+                    </th:block>
 
                     <!-- Estado vazio -->
-                    <li th:if="${comentarios == null or comentarios.isEmpty()}"
+                    <li th:if="${comentarios == null or comentarios.vazia}"
                         class="flex flex-col items-center justify-center gap-2
-                               p-8 text-center">
+                            p-8 text-center">
 
                         <svg xmlns="http://www.w3.org/2000/svg"
-                             viewBox="0 0 24 24"
-                             fill="none"
-                             stroke="currentColor"
-                             stroke-width="1.5"
-                             stroke-linecap="round"
-                             stroke-linejoin="round"
-                             class="h-8 w-8 text-slate-600">
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.5"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            class="h-8 w-8 text-slate-600">
                             <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
                             <path d="M8 9h8M8 13h5"/>
                         </svg>
 
                         <p class="text-sm text-slate-400">
-                            Nenhum comentário ainda.
+                            Nenhum comentário encontrado.
                         </p>
 
                         <p class="text-xs text-slate-500">
-                            Use o campo acima para registrar o andamento desta tarefa.
+                            Use o campo abaixo para registrar o andamento desta tarefa.
                         </p>
 
                     </li>
 
                 </ul>
 
+                <!-- Formulário de criação -->
+                <th:block th:replace="~{comentarios/create :: create}"></th:block>
+
+                <!-- Paginação -->
+                <div th:if="${comentarios != null and comentarios.numeroPaginas > 1}"
+                    class="border-t border-slate-800 p-4">
+
+                    <th:block th:replace="~{
+                        components/paginacao :: paginacao(${comentarios})
+                    }"></th:block>
+
+                </div>
+
             </section>
+
 
         </div>
 
