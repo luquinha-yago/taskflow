@@ -1,0 +1,11 @@
+<th:block th:fragment="lista" xmlns:th="http://www.thymeleaf.org">
+    <li th:if="${#lists.isEmpty(empresas)}" class="px-4 py-2 text-sm text-slate-400 pointer-events-none">
+        Nenhuma empresa encontrada.
+    </li>
+
+    <li th:each="empresa: ${empresas}" class="px-4 py-2 text-sm text-slate-200 cursor-pointer hover:bg-slate-700"
+        th:data-value="${empresa.codigo}" 
+        th:data-text="${empresa.nomeFantasia}" 
+        th:text="${empresa.nomeFantasia}">
+    </li>
+</th:block>

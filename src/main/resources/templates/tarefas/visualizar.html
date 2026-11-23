@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="pt-BR"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layoutpadrao}">
+
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Tarefa</title>
+</head>
+
+<body>
+
+<main layout:fragment="conteudo"
+      th:fragment="conteudo"
+      id="main"
+      class="flex flex-col w-full min-h-full p-6 md:p-8 gap-6">
+
+    <!-- Cabeçalho da tarefa -->
+    <section class="flex flex-col sm:flex-row sm:items-start
+                    justify-between gap-4">
+
+        <div class="flex items-start gap-3 min-w-0">
+
+            <a th:href="@{/projetos/{codigo}(codigo=${tarefa.codigoProjeto})}"
+               title="Voltar para o quadro do projeto"
+               class="flex h-10 w-10 shrink-0 items-center
+                      justify-center rounded-xl border
+                      border-slate-700 bg-slate-800
+                      text-slate-300 hover:text-white
+                      hover:bg-slate-700 transition">
+
+                <svg xmlns="http://www.w3.org/2000/svg"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="2"
+                     stroke-linecap="round"
+                     stroke-linejoin="round"
+                     class="h-5 w-5">
+                    <path d="m15 18-6-6 6-6"/>
+                </svg>
+
+            </a>
+
+            <div class="min-w-0">
+
+                <p class="text-xs font-semibold uppercase
+                          tracking-wider text-blue-400">
+                    <span th:text="${'TAREFA #' + tarefa.codigo}"></span>
+                    <span class="text-slate-500"> · </span>
+                    <span class="text-slate-400 normal-case tracking-normal"
+                          th:text="${tarefa.nomeProjeto}"></span>
+                </p>
+
+                <h1 class="text-2xl font-bold text-white mt-1 break-words"
+                    th:text="${tarefa.titulo}">
+                </h1>
+
+                <div class="flex flex-wrap items-center gap-2 mt-3">
+
+                    <span class="taskflow-status"
+                          th:classappend="${tarefa.statusTarefa.name() == 'A_FAZER' ? 'taskflow-status-planejado' :
+                                           tarefa.statusTarefa.name() == 'FAZENDO' ? 'taskflow-status-andamento' :
+                                           tarefa.statusTarefa.name() == 'EM_REVISAO' ? 'taskflow-status-revisao' :
+                                           'taskflow-status-concluido'}"
+                          th:text="${tarefa.statusTarefa.descricao}">
+                    </span>
+
+                    <span class="taskflow-prioridade"
+                          th:classappend="${tarefa.prioridade.name() == 'BAIXA' ? 'taskflow-prioridade-baixa' :
+                                           tarefa.prioridade.name() == 'MEDIA' ? 'taskflow-prioridade-media' :
+                                           'taskflow-prioridade-alta'}"
+                          th:text="${'Prioridade ' + tarefa.prioridade.descricao}">
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Ações -->
+        <div class="flex items-center gap-2 shrink-0">
+
+            <a th:href="@{/tarefas/{codigo}/editar(codigo=${tarefa.codigo})}"
+               class="inline-flex items-center gap-2 rounded-lg
+                      border border-slate-700 bg-slate-800
+                      px-4 py-2.5 text-sm font-medium
+                      text-slate-200 hover:bg-slate-700
+                      transition">
+
+                <svg xmlns="http://www.w3.org/2000/svg"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="1.8"
+                     stroke-linecap="round"
+                     stroke-linejoin="round"
+                     class="h-4 w-4">
+                    <path d="M12 20h9"/>
+                    <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L8 18l-4 1 1-4Z"/>
+                </svg>
+
+                Editar tarefa
+            </a>
+
+            <button type="button"
+                    th:attr="hx-delete=@{/tarefas/{codigo}(codigo=${tarefa.codigo})}"
+                    hx-confirm="Tem certeza que deseja excluir esta tarefa?"
+                    hx-target="#main"
+                    hx-swap="outerHTML"
+                    title="Excluir tarefa"
+                    aria-label="Excluir tarefa"
+                    class="inline-flex h-10 w-10 items-center justify-center
+                           rounded-lg border border-slate-700
+                           bg-slate-800 text-slate-400
+                           transition hover:border-red-500/40
+                           hover:bg-red-500/10 hover:text-red-400">
+
+                <svg xmlns="http://www.w3.org/2000/svg"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="1.8"
+                     stroke-linecap="round"
+                     stroke-linejoin="round"
+                     class="h-4 w-4">
+                    <path d="M3 6h18"/>
+                    <path d="M8 6V4h8v2"/>
+                    <path d="m19 6-1 14H6L5 6"/>
+                    <path d="M10 11v5M14 11v5"/>
+                </svg>
+
+            </button>
+
+        </div>
+
+    </section>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+
+        <!-- Coluna principal: descrição e comentários -->
+        <div class="lg:col-span-2 flex flex-col gap-6 min-w-0">
+
+            <!-- Descrição -->
+            <section class="rounded-xl border border-slate-700/80
+                            bg-slate-900 p-5">
+
+                <h2 class="text-sm font-semibold text-slate-200">
+                    Descrição
+                </h2>
+
+                <p class="mt-3 text-sm text-slate-400 leading-relaxed
+                          whitespace-pre-line break-words"
+                   th:text="${tarefa.descricao != null and !tarefa.descricao.isBlank()
+                              ? tarefa.descricao
+                              : 'Nenhuma descrição informada.'}">
+                </p>
+
+            </section>
+
+            <!-- Comentários -->
+            <section id="comentarios-conteudo"
+                     th:fragment="comentariosConteudo"
+                     class="rounded-xl border border-slate-700/80
+                            bg-slate-900 overflow-hidden">
+
+                <!-- Cabeçalho -->
+                <div class="flex items-center justify-between gap-3
+                            border-b border-slate-700 bg-slate-800/60 p-5">
+
+                    <div class="flex items-center gap-2">
+
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.8"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            class="h-5 w-5 text-blue-400">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                        </svg>
+
+                        <h2 class="font-semibold text-slate-200">
+                            Comentários
+                        </h2>
+
+                        <span class="rounded-md bg-slate-700 px-2 py-0.5
+                                    text-xs text-slate-300"
+                            th:text="${comentarios != null ? comentarios.totalElementos : 0}">
+                            0
+                        </span>
+
+                    </div>
+
+                </div>
+
+                <!-- Filtros de comentários -->
+                <th:block th:replace="~{comentarios/comentario_filtros :: comentarioFiltros}"></th:block>
+
+                <!-- Lista de comentários -->
+                <ul class="flex flex-col divide-y divide-slate-800">
+
+                    <!-- Cards -->
+                    <th:block th:if="${comentarios != null and !comentarios.vazia}">
+
+                        <th:block th:each="comentario : ${comentarios.conteudo}">
+
+                            <th:block th:replace="~{
+                                comentarios/fragments/comentario_card
+                                :: comentarioCard(${comentario})
+                            }"></th:block>
+
+                        </th:block>
+
+                    </th:block>
+
+                    <!-- Estado vazio -->
+                    <li th:if="${comentarios == null or comentarios.vazia}"
+                        class="flex flex-col items-center justify-center gap-2
+                            p-8 text-center">
+
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.5"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            class="h-8 w-8 text-slate-600">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                            <path d="M8 9h8M8 13h5"/>
+                        </svg>
+
+                        <p class="text-sm text-slate-400">
+                            Nenhum comentário encontrado.
+                        </p>
+
+                        <p class="text-xs text-slate-500">
+                            Use o campo abaixo para registrar o andamento desta tarefa.
+                        </p>
+
+                    </li>
+
+                </ul>
+
+                <!-- Formulário de criação -->
+                <th:block th:replace="~{comentarios/create :: create}"></th:block>
+
+                <!-- Paginação -->
+                <div th:if="${comentarios != null and comentarios.numeroPaginas > 1}"
+                    class="border-t border-slate-800 p-4">
+
+                    <th:block th:replace="~{
+                        components/paginacao :: paginacao(${comentarios})
+                    }"></th:block>
+
+                </div>
+
+            </section>
+
+
+        </div>
+
+        <!-- Coluna lateral: detalhes -->
+        <aside class="flex flex-col gap-4 rounded-xl border
+                      border-slate-700/80 bg-slate-900 p-5">
+
+            <h2 class="text-sm font-semibold text-slate-200">
+                Detalhes
+            </h2>
+
+            <div>
+                <p class="text-xs text-slate-500">Responsável</p>
+                <p class="text-sm font-semibold text-slate-200 mt-1"
+                   th:text="${tarefa.nomeFuncionarioResponsavel != null
+                       ? tarefa.nomeFuncionarioResponsavel
+                       : 'Sem responsável'}">
+                </p>
+            </div>
+
+            <div>
+                <p class="text-xs text-slate-500">Projeto</p>
+                <a th:href="@{/projetos/{codigo}(codigo=${tarefa.codigoProjeto})}"
+                   class="text-sm font-semibold text-blue-400 hover:text-blue-300 mt-1 inline-block"
+                   th:text="${tarefa.nomeProjeto}">
+                </a>
+            </div>
+
+            <div>
+                <p class="text-xs text-slate-500">Empresa</p>
+                <p class="text-sm font-semibold text-slate-200 mt-1"
+                   th:text="${tarefa.nomeEmpresa != null ? tarefa.nomeEmpresa : 'Não associada'}">
+                </p>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4 rounded-xl bg-slate-800/60 p-4">
+
+                <div>
+                    <p class="text-xs text-slate-500 mb-1">Criada em</p>
+                    <p class="text-sm font-medium text-slate-200"
+                       th:text="${tarefa.dataCriacao != null
+                           ? #temporals.format(tarefa.dataCriacao, 'dd/MM/yyyy')
+                           : 'Não definida'}">
+                    </p>
+                </div>
+
+                <div>
+                    <p class="text-xs text-slate-500 mb-1">Início</p>
+                    <p class="text-sm font-medium text-slate-200"
+                       th:text="${tarefa.dataInicio != null
+                           ? #temporals.format(tarefa.dataInicio, 'dd/MM/yyyy')
+                           : 'Não definida'}">
+                    </p>
+                </div>
+
+                <div>
+                    <p class="text-xs text-slate-500 mb-1">Prazo</p>
+                    <p class="text-sm font-medium"
+                       th:classappend="${tarefa.dataPrazo != null
+                           and tarefa.statusTarefa.name() != 'FEITO'
+                           and tarefa.dataPrazo.isBefore(#temporals.createToday())
+                           ? 'text-red-400' : 'text-slate-200'}"
+                       th:text="${tarefa.dataPrazo != null
+                           ? #temporals.format(tarefa.dataPrazo, 'dd/MM/yyyy')
+                           : 'Não definido'}">
+                    </p>
+                </div>
+
+                <div>
+                    <p class="text-xs text-slate-500 mb-1">Conclusão</p>
+                    <p class="text-sm font-medium"
+                       th:classappend="${tarefa.dataConclusao != null ? 'text-emerald-400' : 'text-slate-200'}"
+                       th:text="${tarefa.dataConclusao != null
+                           ? #temporals.format(tarefa.dataConclusao, 'dd/MM/yyyy')
+                           : 'Em aberto'}">
+                    </p>
+                </div>
+
+            </div>
+
+        </aside>
+
+    </div>
+
+</main>
+
+</body>
+</html>

@@ -24,6 +24,28 @@
         isValidado=true)}">
     </div>
 
+    <div th:replace="~{components/forms :: inputBuscavel(
+        textoLabel='Empresa',
+        nomeAtributo='codigoEmpresa',
+        valorAtributo=*{codigoEmpresa},
+        nomeAtributoTexto='nomeEmpresa',
+        valorAtributoTexto=*{nomeEmpresa},
+        urlBusca='/funcionarios/pesquisarempresa',
+        placeholderBusca='Digite ao menos 3 letras...',
+        isValidado=true)}">
+    </div>
+
+    <div th:replace="~{components/forms :: inputBuscavel(
+        textoLabel='Departamento',
+        nomeAtributo='codigoDepartamento',
+        valorAtributo=*{codigoDepartamento},
+        nomeAtributoTexto='nomeDepartamento',
+        valorAtributoTexto=*{nomeDepartamento},
+        urlBusca='/funcionarios/pesquisardepartamento',
+        placeholderBusca='Digite ao menos 3 letras...',
+        isValidado=true)}">
+    </div>
+
     <div th:replace="~{components/forms :: inputTexto(
         textoLabel='Cargo',
         nomeAtributo='cargo',

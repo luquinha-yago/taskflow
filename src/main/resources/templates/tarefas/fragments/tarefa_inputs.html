@@ -1,0 +1,69 @@
+<th:block th:fragment="campos">
+
+    <!-- A tarefa sempre pertence ao projeto de onde ela foi criada -->
+    <div th:replace="~{components/forms :: campoEstatico(
+        textoLabel='Projeto',
+        textoExibicao=*{nomeProjeto})}">
+    </div>
+    <input type="hidden" th:field="*{codigoProjeto}" />
+    <input type="hidden" th:field="*{nomeProjeto}" />
+    <p th:if="${#fields.hasErrors('codigoProjeto')}"
+       th:each="erro : ${#fields.errors('codigoProjeto')}"
+       th:text="${erro} + '. '"
+       class="text-sm text-red-600 mt-2"></p>
+
+    <div th:replace="~{components/forms :: inputTexto(
+        textoLabel='Título da Tarefa',
+        nomeAtributo='titulo',
+        isValidado=true)}">
+    </div>
+
+    <div th:replace="~{components/forms :: inputTextArea(
+        textoLabel='Descrição',
+        nomeAtributo='descricao',
+        nroLinhas=4,
+        isValidado=true)}">
+    </div>
+
+    <div th:replace="~{components/forms :: inputData(
+        textoLabel='Data de Início',
+        nomeAtributo='dataInicio',
+        isValidado=true)}">
+    </div>
+
+    <div th:replace="~{components/forms :: inputData(
+        textoLabel='Prazo',
+        nomeAtributo='dataPrazo',
+        isValidado=true)}">
+    </div>
+
+    <div th:replace="~{components/forms :: inputRadio(
+        textoLabelGroup='Situação da tarefa',
+        nomeAtributo='statusTarefa',
+        listaOpcoes=${statusTarefas},
+        propValue='valor',
+        propLabel='descricao',
+        isValidado=true
+    )}"></div>
+
+    <div th:replace="~{components/forms :: inputRadio(
+        textoLabelGroup='Prioridade',
+        nomeAtributo='prioridade',
+        listaOpcoes=${prioridades},
+        propValue='valor',
+        propLabel='descricao',
+        isValidado=true
+    )}"></div>
+
+    <div th:replace="~{components/forms :: inputBuscavel(
+        textoLabel='Funcionário responsável',
+        nomeAtributo='codigoFuncionarioResponsavel',
+        valorAtributo=*{codigoFuncionarioResponsavel},
+        nomeAtributoTexto='nomeFuncionarioResponsavel',
+        valorAtributoTexto=*{nomeFuncionarioResponsavel},
+        urlBusca='/tarefas/pesquisarfuncionario',
+        placeholderBusca='Digite ao menos 3 letras...',
+        isValidado=true)}">
+    </div>
+
+</th:block>

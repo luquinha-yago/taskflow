@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pt-BR"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.thymeleaf.org"
+      layout:decorate="~{layout/layoutpadrao}">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cadastro de Tarefa</title>
+</head>
+
+<body>
+
+    <main layout:fragment="conteudo"
+          th:fragment="formulario"
+          id="main"
+          class="flex flex-col w-full p-6 md:p-10">
+
+        <div th:replace="~{components/cabecalho-pagina :: cabecalho(
+            'Cadastrar tarefa',
+            'Preencha as informações para adicionar uma nova tarefa ao projeto.',
+            null
+        )}"></div>
+
+        <form th:hx-post="@{/tarefas}"
+              th:object="${tarefaCreateRequest}"
+              class="w-full max-w-2xl">
+
+            <div th:replace="~{tarefas/fragments/tarefa_inputs :: campos}">
+            </div>
+
+            <div class="flex flex-wrap gap-3 mt-8">
+
+                <button type="submit"
+                        class="px-5 py-3 rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-500 transition">
+                    Cadastrar Tarefa
+                </button>
+
+                <a th:hx-get="@{/projetos/{codigo}(codigo=*{codigoProjeto})}"
+                   hx-target="#main"
+                   hx-push-url="true"
+                   class="px-5 py-3 rounded-lg border border-slate-600 text-slate-300 hover:bg-slate-700 transition cursor-pointer">
+                    Cancelar
+                </a>
+
+            </div>
+
+        </form>
+
+    </main>
+
+</body>
+</html>

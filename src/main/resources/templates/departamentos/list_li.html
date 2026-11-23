@@ -1,0 +1,11 @@
+<th:block th:fragment="lista" xmlns:th="http://www.thymeleaf.org">
+    <li th:if="${#lists.isEmpty(departamentos)}" class="px-4 py-2 text-sm text-slate-400 pointer-events-none">
+        Nenhum departamento encotrado.
+    </li>
+
+    <li th:each="departamento : ${departamentos}" class="px-4 py-2 text-sm text-slate-200 cursor-pointer hover:bg-slate-700" 
+        th:data-value="${departamento.codigo}" 
+        th:data-text="${departamento.nome}" 
+        th:text="${departamento.nome}">
+    </li>
+</th:block>
