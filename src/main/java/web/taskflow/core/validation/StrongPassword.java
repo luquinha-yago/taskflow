@@ -6,10 +6,9 @@ import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
-import web.taskflow.core.validation.validator.ValidPasswordValidator;
+import web.taskflow.core.validation.validator.StrongPasswordValidator;
 
 /**
  * Anotação de validação customizada para aplicação de políticas de segurança em senhas (baseada na biblioteca Passay).
@@ -41,7 +40,7 @@ import web.taskflow.core.validation.validator.ValidPasswordValidator;
  * public class UsuarioRequestDTO {
  *
  *     @NotBlank(message = "A senha é obrigatória")
- *     @ValidPassword(
+ *     @StrongPassword(
  *         minSize = 8,
  *         digits = 1,
  *         uppercase = 1,
@@ -49,11 +48,11 @@ import web.taskflow.core.validation.validator.ValidPasswordValidator;
  *         additionalForbidden = {"vacinacao2026", "empresa123"}
  *     )
  *     private String senha;
-
+ *
  *     public String getSenha() {
  *         return senha;
  *     }
-
+ *
  *     public void setSenha(String senha) {
  *         this.senha = senha;
  *     }
@@ -67,7 +66,7 @@ import web.taskflow.core.validation.validator.ValidPasswordValidator;
  *     String login,
  *
  *     @NotBlank(message = "A senha é obrigatória")
- *     @ValidPassword(
+ *     @StrongPassword(
  *         minSize = 10,
  *         digits = 2,
  *         special = 1,
@@ -79,14 +78,14 @@ import web.taskflow.core.validation.validator.ValidPasswordValidator;
  *
  * @author Rafael Godoi Orbolato
  * @since 1.0.0
- * @see ValidPasswordValidator
+ * @see StrongPasswordValidator
  */
 @Target({ ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER, ElementType.RECORD_COMPONENT, ElementType.ANNOTATION_TYPE })
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = ValidPasswordValidator.class)
+@Constraint(validatedBy = StrongPasswordValidator.class)
 @Documented
-@Repeatable(ValidPassword.List.class)
-public @interface ValidPassword {
+@Repeatable(StrongPassword.List.class)
+public @interface StrongPassword {
 
 	/**
 	 * Define o tamanho mínimo permitido para a senha.
@@ -109,14 +108,14 @@ public @interface ValidPassword {
 	int maxSize() default 32;
 
 	/**
-	 * Define se a lista de senhas proibidas e comuns (ex: "123456", "password", "admin", "senha") deve ser validada.
+	 * Define se a lista de senhas proibidas e comuns (ex: "123456", "password", "admin", "senha") deve ser verificada.
 	 * <p>
 	 * O padrão é {@code true}. Defina como {@code false} em ambiente de desenvolvimento para facilitar testes com senhas simples.
 	 * </p>
 	 * 
 	 * @return {@code true} se deve barrar senhas comuns; {@code false} caso contrário.
 	 */
-	boolean validateForbidden() default true;
+	boolean checkForbidden() default true;
 
 	/**
 	 * Quantidade mínima obrigatória de letras alfabéticas gerais (maiúsculas ou minúsculas).
@@ -217,12 +216,13 @@ public @interface ValidPassword {
 	Class<? extends Payload>[] payload() default {};
 
 	/**
-	 * Define um container para permitir a repetição da anotação {@link ValidPassword} no mesmo elemento.
+	 * Define um container para permitir a repetição da anotação {@link StrongPassword} no mesmo elemento.
 	 */
 	@Target({ ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER, ElementType.RECORD_COMPONENT, ElementType.ANNOTATION_TYPE })
 	@Retention(RetentionPolicy.RUNTIME)
 	@Documented
 	@interface List {
-		ValidPassword[] value();
+		StrongPassword[] value();
 	}
 }
+
