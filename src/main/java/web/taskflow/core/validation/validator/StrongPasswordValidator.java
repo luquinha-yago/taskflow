@@ -3,7 +3,6 @@ package web.taskflow.core.validation.validator;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
 import org.passay.DefaultPasswordValidator;
 import org.passay.PasswordData;
 import org.passay.PasswordValidator;
@@ -18,15 +17,14 @@ import org.passay.rule.DictionaryRule;
 import org.passay.rule.IllegalSequenceRule;
 import org.passay.rule.LengthRule;
 import org.passay.rule.Rule;
-
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
-import web.taskflow.core.validation.ValidPassword;
+import web.taskflow.core.validation.StrongPassword;
 
 /**
- * Implementação do validador associado à anotação {@link ValidPassword}.
+ * Implementação do validador associado à anotação {@link StrongPassword}.
  */
-public class ValidPasswordValidator implements ConstraintValidator<ValidPassword, String> {
+public class StrongPasswordValidator implements ConstraintValidator<StrongPassword, String> {
 
     private PasswordValidator validator;
     private int letters;
@@ -43,7 +41,7 @@ public class ValidPasswordValidator implements ConstraintValidator<ValidPassword
             "12345678", "senha", "admin", "mudar123");
 
     @Override
-    public void initialize(ValidPassword constraintAnnotation) {
+    public void initialize(StrongPassword constraintAnnotation) {
         this.letters = constraintAnnotation.letters();
         this.digits = constraintAnnotation.digits();
         this.special = constraintAnnotation.special();
@@ -80,7 +78,7 @@ public class ValidPasswordValidator implements ConstraintValidator<ValidPassword
             rules.add(new IllegalSequenceRule(EnglishSequenceData.USQwerty, constraintAnnotation.keyboardSequences(), false));
         }
 
-        if (constraintAnnotation.validateForbidden()) {
+        if (constraintAnnotation.checkForbidden()) {
             List<String> forbiddenPasswords = new ArrayList<>(DEFAULT_FORBIDDEN);
             if (constraintAnnotation.additionalForbidden().length > 0) {
                 forbiddenPasswords.addAll(Arrays.asList(constraintAnnotation.additionalForbidden()));
@@ -154,3 +152,4 @@ public class ValidPasswordValidator implements ConstraintValidator<ValidPassword
         return false;
     }
 }
+
